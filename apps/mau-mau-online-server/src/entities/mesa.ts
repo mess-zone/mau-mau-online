@@ -24,6 +24,7 @@ export class Mesa {
             return true
         }
 
+        // não aceitar carta com numero e naipe diferente do topo do monte
         return false
     }
 
