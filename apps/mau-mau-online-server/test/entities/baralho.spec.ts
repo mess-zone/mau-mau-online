@@ -1,7 +1,7 @@
 import { Baralho } from "@/entities/baralho"
 import { Carta } from "@/entities/carta"
 import { Naipe } from "@/entities/naipe"
-import { ValorCarta, ValorCartaStrings } from "@/entities/valor-carta"
+import { NumeroCarta, NumeroCartaStrings } from "@/entities/numero-carta"
 
 
 describe("Baralho entity", () => {
@@ -32,21 +32,21 @@ describe("Baralho entity", () => {
         expect(cartasPaus).toHaveLength(13)
     })
 
-    test('cada naipe deve ter 13 valores de cartas', () => {
-        for(const valor in ValorCarta) {
-            expect(cartasEspadas.filter(carta => carta.valor === ValorCarta[valor as ValorCartaStrings])).toHaveLength(1)
+    test('cada naipe deve ter cartas de 13 numeros', () => {
+        for(const valor in NumeroCarta) {
+            expect(cartasEspadas.filter(carta => carta.numero === NumeroCarta[valor as NumeroCartaStrings])).toHaveLength(1)
         }
 
-        for(const valor in ValorCarta) {
-            expect(cartasOuros.filter(carta => carta.valor === ValorCarta[valor as ValorCartaStrings])).toHaveLength(1)
+        for(const valor in NumeroCarta) {
+            expect(cartasOuros.filter(carta => carta.numero === NumeroCarta[valor as NumeroCartaStrings])).toHaveLength(1)
         }
 
-        for(const valor in ValorCarta) {
-            expect(cartasCopas.filter(carta => carta.valor === ValorCarta[valor as ValorCartaStrings])).toHaveLength(1)
+        for(const valor in NumeroCarta) {
+            expect(cartasCopas.filter(carta => carta.numero === NumeroCarta[valor as NumeroCartaStrings])).toHaveLength(1)
         }
 
-        for(const valor in ValorCarta) {
-            expect(cartasPaus.filter(carta => carta.valor === ValorCarta[valor as ValorCartaStrings])).toHaveLength(1)
+        for(const valor in NumeroCarta) {
+            expect(cartasPaus.filter(carta => carta.numero === NumeroCarta[valor as NumeroCartaStrings])).toHaveLength(1)
         }
     })
 })

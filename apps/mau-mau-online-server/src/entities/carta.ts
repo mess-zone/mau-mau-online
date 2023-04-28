@@ -1,8 +1,8 @@
 import { Naipe } from "@/entities/naipe";
-import { ValorCarta } from "@/entities/valor-carta";
+import { NumeroCarta } from "@/entities/numero-carta";
 
 export interface Carta {
     naipe: Naipe;
-    valor: ValorCarta;
+    numero: NumeroCarta;
 }
   

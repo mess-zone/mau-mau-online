@@ -1,6 +1,6 @@
 import { Carta } from "@/entities/carta"
 import { Naipe, NaipeStrings } from "@/entities/naipe"
-import { ValorCarta, ValorCartaStrings } from "@/entities/valor-carta";
+import { NumeroCarta, NumeroCartaStrings } from "@/entities/numero-carta";
 
 
 export class Baralho {
@@ -8,8 +8,8 @@ export class Baralho {
 
     constructor() {
         for (const n in Naipe) {
-            for (const carta in ValorCarta) {
-              const novaCarta: Carta = { naipe: Naipe[n as NaipeStrings], valor: ValorCarta[carta as ValorCartaStrings] };
+            for (const carta in NumeroCarta) {
+              const novaCarta: Carta = { naipe: Naipe[n as NaipeStrings], numero: NumeroCarta[carta as NumeroCartaStrings] };
               this.cartas.push(novaCarta);
             }
         }

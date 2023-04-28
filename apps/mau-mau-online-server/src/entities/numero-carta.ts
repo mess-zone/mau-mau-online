@@ -1,4 +1,4 @@
-export enum ValorCarta {
+export enum NumeroCarta {
     As = 'A',
     Dois = '2',
     Tres = '3',
@@ -14,4 +14,4 @@ export enum ValorCarta {
     Rei = 'K'
 }
 
-export type ValorCartaStrings = keyof typeof ValorCarta
+export type NumeroCartaStrings = keyof typeof NumeroCarta
