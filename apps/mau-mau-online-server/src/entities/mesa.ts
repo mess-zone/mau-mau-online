@@ -14,4 +14,8 @@ export class Mesa {
     public botarCarta(carta: Carta) {
         this.stack.push(carta)
     }
+
+    public size() {
+        return this.stack.size()
+    }
 }

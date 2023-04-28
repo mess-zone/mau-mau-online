@@ -29,5 +29,10 @@ describe("Mesa entity", () => {
         expect(fakeStack.peek()).toBe(carta)
     })
 
+    test('deve retornar quantas cartas existem no monte', () => {
+        const stackSize = fakeStack.size()
+        expect(mesa.size()).toBe(stackSize)
+    })
+
 
 })
