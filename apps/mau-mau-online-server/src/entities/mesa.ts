@@ -19,8 +19,8 @@ export class Mesa {
         // se o monte estiver vazio, aceita qualquer carta
         if(this.size() == 0) return true
 
-        // aceita carta com o mesmo naipe do monte
-        if(carta.naipe == this.peek().naipe) {
+        // aceita carta com o mesmo naipe ou numero do topo do monte
+        if(carta.naipe == this.peek().naipe || carta.numero == this.peek().numero) {
             return true
         }
 

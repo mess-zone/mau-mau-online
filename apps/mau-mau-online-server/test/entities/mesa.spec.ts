@@ -70,9 +70,8 @@ describe("Mesa entity", () => {
 
             expect(mesa.validateMove(carta2)).toBeTruthy()
         })
-    
-    
-        test("não deve aceitar botar uma carta com naipe diferente da carta no topo do monte", () => {
+   
+        test("deve permitir botar uma carta com o mesmo numero da carta no topo do monte", () => {
             const carta1: Carta = {
                 naipe: Naipe.Espadas,
                 numero: NumeroCarta.As
@@ -80,7 +79,22 @@ describe("Mesa entity", () => {
             mesa.botarCarta(carta1)
 
             const carta2: Carta = {
-                naipe: Naipe.Copas,
+                naipe: Naipe.Ouros,
+                numero: NumeroCarta.As
+            }
+
+            expect(mesa.validateMove(carta2)).toBeTruthy()
+        })
+ 
+        test("não deve permitir botar uma carta com numero e naipe diferente da carta no topo do monte", () => {
+            const carta1: Carta = {
+                naipe: Naipe.Espadas,
+                numero: NumeroCarta.As
+            }
+            mesa.botarCarta(carta1)
+
+            const carta2: Carta = {
+                naipe: Naipe.Ouros,
                 numero: NumeroCarta.Tres
             }
 
