@@ -72,16 +72,27 @@ describe('List', () => {
     expect(() => list.remove(0)).toThrow('Index out of bounds');
   });
 
+//   it('should iterate over all elements', () => {
+//     const values = [1, 2, 3];
+//     list.insert(values[0], 0);
+//     list.insert(values[1], 1);
+//     list.insert(values[2], 2);
+//     const callback = jest.fn();
+//     list.forEach(callback);
+//     expect(callback).toHaveBeenCalledTimes(3);
+//     expect(callback.mock.calls[0][0]).toBe(values[0]);
+//     expect(callback.mock.calls[1][0]).toBe(values[1]);
+//     expect(callback.mock.calls[2][0]).toBe(values[2]);
+//   });
+
   it('should iterate over all elements', () => {
     const values = [1, 2, 3];
     list.insert(values[0], 0);
     list.insert(values[1], 1);
     list.insert(values[2], 2);
-    const callback = jest.fn();
-    list.forEach(callback);
-    expect(callback).toHaveBeenCalledTimes(3);
-    expect(callback.mock.calls[0][0]).toBe(values[0]);
-    expect(callback.mock.calls[1][0]).toBe(values[1]);
-    expect(callback.mock.calls[2][0]).toBe(values[2]);
+
+    const items = [...list.iterator()]
+
+    expect(items).toEqual(values)
   });
 });

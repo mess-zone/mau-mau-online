@@ -63,11 +63,19 @@ export class List<T> {
       return removedNode.value;
     }
   
-    public forEach(callback: (value: T) => void) {
-      let node = this.head;
-      while (node) {
-        callback(node.value);
-        node = node.next;
-      }
+    // public forEach(callback: (value: T) => void) {
+    //   let node = this.head;
+    //   while (node) {
+    //     callback(node.value);
+    //     node = node.next;
+    //   }
+    // }
+
+    public *iterator() {
+        let node = this.head;
+        while (node) {
+          yield node.value;
+          node = node.next;
+        }
     }
   }
