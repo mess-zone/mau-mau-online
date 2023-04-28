@@ -9,22 +9,27 @@ describe('List', () => {
 
   it('should start with size 0', () => {
     expect(list.size).toBe(0);
+    expect(list.isEmpty).toBe(true);
   });
 
   it('should insert an element at the beginning', () => {
     list.insert(1, 0);
     expect(list.size).toBe(1);
+    expect(list.isEmpty).toBe(false);
     expect(list.remove(0)).toBe(1);
     expect(list.size).toBe(0);
+    expect(list.isEmpty).toBe(true);
   });
 
   it('should insert an element at the end', () => {
     list.insert(1, 0);
     list.insert(2, 1);
     expect(list.size).toBe(2);
+    expect(list.isEmpty).toBe(false);
     expect(list.remove(1)).toBe(2);
     expect(list.remove(0)).toBe(1);
     expect(list.size).toBe(0);
+    expect(list.isEmpty).toBe(true);
   });
 
   it('should insert an element in the middle', () => {
@@ -32,10 +37,12 @@ describe('List', () => {
     list.insert(3, 1);
     list.insert(2, 1);
     expect(list.size).toBe(3);
+    expect(list.isEmpty).toBe(false);
     expect(list.remove(1)).toBe(2);
     expect(list.remove(1)).toBe(3);
     expect(list.remove(0)).toBe(1);
     expect(list.size).toBe(0);
+    expect(list.isEmpty).toBe(true);
   });
 
   it('should throw an error when inserting an element out of bounds', () => {
@@ -47,6 +54,7 @@ describe('List', () => {
     list.insert(1, 0);
     expect(list.remove(0)).toBe(1);
     expect(list.size).toBe(0);
+    expect(list.isEmpty).toBe(true);
   });
 
   it('should remove an element at the end', () => {
@@ -55,6 +63,7 @@ describe('List', () => {
     expect(list.remove(1)).toBe(2);
     expect(list.remove(0)).toBe(1);
     expect(list.size).toBe(0);
+    expect(list.isEmpty).toBe(true);
   });
 
   it('should remove an element in the middle', () => {
@@ -65,6 +74,7 @@ describe('List', () => {
     expect(list.remove(1)).toBe(3);
     expect(list.remove(0)).toBe(1);
     expect(list.size).toBe(0);
+    expect(list.isEmpty).toBe(true);
   });
 
   it('should throw an error when removing an element out of bounds', () => {

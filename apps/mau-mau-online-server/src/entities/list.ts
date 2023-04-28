@@ -11,6 +11,10 @@ export class List<T> {
     public get size() {
       return this._size;
     }
+
+    public get isEmpty() {
+      return this._size === 0;
+    }
   
     public insert(value: T, index: number) {
       if (index < 0 || index > this._size) {
