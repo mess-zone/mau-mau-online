@@ -1,0 +1,10 @@
+node_modules/
+
+.turbo/
+build/**
+dist/**
+.next/**
+# Local Netlify folder
+.netlify
+
+.env
