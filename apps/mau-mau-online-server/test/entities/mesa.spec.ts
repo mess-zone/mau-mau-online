@@ -34,7 +34,7 @@ describe("Mesa entity", () => {
         expect(mesa.peek()).toBe(carta)
     })
 
-    test("deve botar uma carta qualquer no topo do monte, se ele estiver vazio", () => {
+    test("deve botar uma carta qualquer no topo do monte", () => {
         expect(mesa.size()).toBe(0)
         const carta: Carta = {
             naipe: Naipe.Espadas,
@@ -44,6 +44,48 @@ describe("Mesa entity", () => {
         mesa.botarCarta(carta)
         expect(mesa.size()).toBe(1)
         expect(fakeStack.peek()).toBe(carta)
+    })
+
+    describe('validação de movimentos', () => {
+        test("deve aceitar botar qualquer carta no topo do monte vazio", () => {
+            const carta: Carta = {
+                naipe: Naipe.Espadas,
+                numero: NumeroCarta.As
+            }
+
+            expect(mesa.validateMove(carta)).toBeTruthy()
+        })
+    
+        test("deve permitir botar uma carta com o mesmo naipe da carta no topo do monte", () => {
+            const carta1: Carta = {
+                naipe: Naipe.Espadas,
+                numero: NumeroCarta.As
+            }
+            mesa.botarCarta(carta1)
+
+            const carta2: Carta = {
+                naipe: Naipe.Espadas,
+                numero: NumeroCarta.Tres
+            }
+
+            expect(mesa.validateMove(carta2)).toBeTruthy()
+        })
+    
+    
+        test("não deve aceitar botar uma carta com naipe diferente da carta no topo do monte", () => {
+            const carta1: Carta = {
+                naipe: Naipe.Espadas,
+                numero: NumeroCarta.As
+            }
+            mesa.botarCarta(carta1)
+
+            const carta2: Carta = {
+                naipe: Naipe.Copas,
+                numero: NumeroCarta.Tres
+            }
+
+            expect(mesa.validateMove(carta2)).toBeFalsy()
+        })
     })
 
 
