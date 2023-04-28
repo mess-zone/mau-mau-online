@@ -41,4 +41,8 @@ export class Baralho {
             array[j] = temp;
         }
     }
+
+    public tirarCarta() {
+        return this.stack.pop()
+    }
 }

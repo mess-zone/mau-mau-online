@@ -69,4 +69,21 @@ describe("Baralho entity", () => {
             ).toHaveLength(1);
         }
     });
+
+    test("deve retirar uma carta do topo do monte", () => {
+        const peek = fakeStack.peek()
+        expect(fakeStack.size()).toBe(52)
+        const carta = baralho.tirarCarta()
+        expect(fakeStack.size()).toBe(51)
+        expect(carta).toEqual(peek)
+    })
+
+    test('se não tiver cartas, retornar undefined', () => {
+        let carta = null
+        for(let i = 0; i <= 52; i++) {
+            carta = baralho.tirarCarta()
+        }
+
+        expect(carta).toBeUndefined()
+    })
 });
