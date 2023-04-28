@@ -10,4 +10,8 @@ export class Mesa {
     constructor(stack: Stack<Carta>) {
         this.stack = stack
     }
+
+    public botarCarta(carta: Carta) {
+        this.stack.push(carta)
+    }
 }
