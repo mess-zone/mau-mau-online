@@ -7,11 +7,11 @@ export class Baralho {
     public cartas: Carta[] = []
 
     constructor() {
-        // for (const n in Naipe) {
-        //     for (const carta in ValorCarta) {
-        //       const novaCarta: Carta = { naipe: Naipe[n as NaipeStrings], valor: ValorCarta[carta as ValorCartaStrings] };
-        //       this.cartas.push(novaCarta);
-        //     }
-        // }
+        for (const n in Naipe) {
+            for (const carta in ValorCarta) {
+              const novaCarta: Carta = { naipe: Naipe[n as NaipeStrings], valor: ValorCarta[carta as ValorCartaStrings] };
+              this.cartas.push(novaCarta);
+            }
+        }
     }
 }
