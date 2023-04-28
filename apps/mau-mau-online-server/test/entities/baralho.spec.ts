@@ -5,48 +5,107 @@ import { NumeroCarta, NumeroCartaStrings } from "@/entities/numero-carta"
 
 
 describe("Baralho entity", () => {
-    let baralho: Baralho
-
-    let cartasEspadas: Carta[]
-    let cartasOuros: Carta[]
-    let cartasCopas: Carta[]
-    let cartasPaus: Carta[]
-
-    beforeAll(() => {
-        baralho = new Baralho()
-
-        cartasEspadas = baralho.cartas.filter(carta => carta.naipe == Naipe.Espadas)
-        cartasOuros = baralho.cartas.filter(carta => carta.naipe == Naipe.Ouros)
-        cartasCopas = baralho.cartas.filter(carta => carta.naipe == Naipe.Copas)
-        cartasPaus = baralho.cartas.filter(carta => carta.naipe == Naipe.Paus)
+    describe('constructor', () => {
+        let baralho: Baralho
+    
+        let cartasEspadas: Carta[]
+        let cartasOuros: Carta[]
+        let cartasCopas: Carta[]
+        let cartasPaus: Carta[]
+    
+        beforeAll(() => {
+            baralho = new Baralho()
+    
+            cartasEspadas = baralho.cartas.filter(carta => carta.naipe == Naipe.Espadas)
+            cartasOuros = baralho.cartas.filter(carta => carta.naipe == Naipe.Ouros)
+            cartasCopas = baralho.cartas.filter(carta => carta.naipe == Naipe.Copas)
+            cartasPaus = baralho.cartas.filter(carta => carta.naipe == Naipe.Paus)
+        })
+    
+        test('deve ter 52 cartas', () => {
+            expect(baralho.cartas).toHaveLength(52)
+        })
+    
+        test('deve ter 13 cartas de cada naipe', () => {
+            expect(cartasEspadas).toHaveLength(13)
+            expect(cartasOuros).toHaveLength(13)
+            expect(cartasCopas).toHaveLength(13)
+            expect(cartasPaus).toHaveLength(13)
+        })
+    
+        test('cada naipe deve ter cartas de 13 numeros', () => {
+            for(const valor in NumeroCarta) {
+                expect(cartasEspadas.filter(carta => carta.numero === NumeroCarta[valor as NumeroCartaStrings])).toHaveLength(1)
+            }
+    
+            for(const valor in NumeroCarta) {
+                expect(cartasOuros.filter(carta => carta.numero === NumeroCarta[valor as NumeroCartaStrings])).toHaveLength(1)
+            }
+    
+            for(const valor in NumeroCarta) {
+                expect(cartasCopas.filter(carta => carta.numero === NumeroCarta[valor as NumeroCartaStrings])).toHaveLength(1)
+            }
+    
+            for(const valor in NumeroCarta) {
+                expect(cartasPaus.filter(carta => carta.numero === NumeroCarta[valor as NumeroCartaStrings])).toHaveLength(1)
+            }
+        })
     })
 
-    test('deve ter 52 cartas', () => {
-        expect(baralho.cartas).toHaveLength(52)
-    })
+    describe('embaralhar', () => {
+        let baralho: Baralho
 
-    test('deve ter 13 cartas de cada naipe', () => {
-        expect(cartasEspadas).toHaveLength(13)
-        expect(cartasOuros).toHaveLength(13)
-        expect(cartasCopas).toHaveLength(13)
-        expect(cartasPaus).toHaveLength(13)
-    })
+        let cartasEspadas: Carta[]
+        let cartasOuros: Carta[]
+        let cartasCopas: Carta[]
+        let cartasPaus: Carta[]
 
-    test('cada naipe deve ter cartas de 13 numeros', () => {
-        for(const valor in NumeroCarta) {
-            expect(cartasEspadas.filter(carta => carta.numero === NumeroCarta[valor as NumeroCartaStrings])).toHaveLength(1)
-        }
+        let baralhoCopy: Carta[]
 
-        for(const valor in NumeroCarta) {
-            expect(cartasOuros.filter(carta => carta.numero === NumeroCarta[valor as NumeroCartaStrings])).toHaveLength(1)
-        }
+        beforeAll(() => {
+            baralho = new Baralho()
 
-        for(const valor in NumeroCarta) {
-            expect(cartasCopas.filter(carta => carta.numero === NumeroCarta[valor as NumeroCartaStrings])).toHaveLength(1)
-        }
+            baralhoCopy = JSON.parse(JSON.stringify(baralho.cartas));
 
-        for(const valor in NumeroCarta) {
-            expect(cartasPaus.filter(carta => carta.numero === NumeroCarta[valor as NumeroCartaStrings])).toHaveLength(1)
-        }
+            baralho.embaralhar()
+
+            cartasEspadas = baralho.cartas.filter(carta => carta.naipe == Naipe.Espadas)
+            cartasOuros = baralho.cartas.filter(carta => carta.naipe == Naipe.Ouros)
+            cartasCopas = baralho.cartas.filter(carta => carta.naipe == Naipe.Copas)
+            cartasPaus = baralho.cartas.filter(carta => carta.naipe == Naipe.Paus)
+        })
+
+        test('deve embaralhar a ordem das cartas', () => {
+            expect(baralho.cartas).not.toEqual(baralhoCopy)
+        })
+
+        test('deve ter 52 cartas', () => {
+            expect(baralho.cartas).toHaveLength(52)
+        })
+
+        test('deve ter 13 cartas de cada naipe', () => {
+            expect(cartasEspadas).toHaveLength(13)
+            expect(cartasOuros).toHaveLength(13)
+            expect(cartasCopas).toHaveLength(13)
+            expect(cartasPaus).toHaveLength(13)
+        })
+
+        test('cada naipe deve ter cartas de 13 numeros', () => {
+            for(const valor in NumeroCarta) {
+                expect(cartasEspadas.filter(carta => carta.numero === NumeroCarta[valor as NumeroCartaStrings])).toHaveLength(1)
+            }
+
+            for(const valor in NumeroCarta) {
+                expect(cartasOuros.filter(carta => carta.numero === NumeroCarta[valor as NumeroCartaStrings])).toHaveLength(1)
+            }
+
+            for(const valor in NumeroCarta) {
+                expect(cartasCopas.filter(carta => carta.numero === NumeroCarta[valor as NumeroCartaStrings])).toHaveLength(1)
+            }
+
+            for(const valor in NumeroCarta) {
+                expect(cartasPaus.filter(carta => carta.numero === NumeroCarta[valor as NumeroCartaStrings])).toHaveLength(1)
+            }
+        })
     })
 })
