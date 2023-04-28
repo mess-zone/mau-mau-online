@@ -45,4 +45,8 @@ export class Baralho {
     public tirarCarta() {
         return this.stack.pop()
     }
+
+    public size() {
+        return this.stack.size()
+    }
 }

@@ -86,4 +86,9 @@ describe("Baralho entity", () => {
 
         expect(carta).toBeUndefined()
     })
+
+    test('deve retornar quantas cartas existem no monte', () => {
+        const stackSize = fakeStack.size()
+        expect(baralho.size()).toBe(stackSize)
+    })
 });
