@@ -4,6 +4,9 @@ import { NumeroCarta, NumeroCartaStrings } from "@/entities/numero-carta";
 import { Stack } from "@/entities/stack";
 
 
+/**
+ * Representa o monte de cartas colocadas de frente para baixo na mesa
+ */
 export class Baralho {
     public stack: Stack<Carta>
 
