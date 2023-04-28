@@ -1,5 +1,5 @@
 export class Stack<T> {
-    private items: T[];
+    protected items: T[];
   
     constructor() {
       this.items = [];

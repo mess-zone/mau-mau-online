@@ -8,9 +8,9 @@ import { Stack } from "@/entities/stack";
  * Representa o monte de cartas colocadas de frente para baixo na mesa
  */
 export class Baralho {
-    public stack: Stack<Carta>
+    private stack: Stack<Carta>
 
-    constructor() {
+    constructor(stack: Stack<Carta>) {
         const cartas: Carta[] = []
 
         for (const n in Naipe) {
@@ -22,7 +22,7 @@ export class Baralho {
 
         this.shuffleArray(cartas)
 
-        this.stack = new Stack<Carta>()
+        this.stack = stack
 
         for(const carta of cartas) {
             this.stack.push(carta)

@@ -2,32 +2,25 @@ import { Baralho } from "@/entities/baralho";
 import { Carta } from "@/entities/carta";
 import { Naipe } from "@/entities/naipe";
 import { NumeroCarta, NumeroCartaStrings } from "@/entities/numero-carta";
+import { FakeStack } from "@test/doubles/fake-stack";
 
 describe("Baralho entity", () => {
+    let fakeStack: FakeStack<Carta>;
     let baralho: Baralho;
 
-    let cartasEspadas: Carta[];
-    let cartasOuros: Carta[];
-    let cartasCopas: Carta[];
-    let cartasPaus: Carta[];
-
     beforeEach(() => {
-        baralho = new Baralho();
+        fakeStack = new FakeStack<Carta>();
+        baralho = new Baralho(fakeStack);
     });
 
     test("deve criar cartas e embaralhar o baralho", () => {
         // deve ter 52 cartas
-        expect(baralho.stack.size()).toBe(52);
+        expect(fakeStack.size()).toBe(52);
 
-        const cartas: Carta[] = [];
-        while (!baralho.stack.isEmpty()) {
-            cartas.push(baralho.stack.pop());
-        }
-
-        cartasEspadas = cartas.filter((carta) => carta.naipe == Naipe.Espadas);
-        cartasOuros = cartas.filter((carta) => carta.naipe == Naipe.Ouros);
-        cartasCopas = cartas.filter((carta) => carta.naipe == Naipe.Copas);
-        cartasPaus = cartas.filter((carta) => carta.naipe == Naipe.Paus);
+        let cartasEspadas = fakeStack._getItemsArray().filter((carta) => carta.naipe == Naipe.Espadas);
+        let cartasOuros = fakeStack._getItemsArray().filter((carta) => carta.naipe == Naipe.Ouros);
+        let cartasCopas = fakeStack._getItemsArray().filter((carta) => carta.naipe == Naipe.Copas);
+        let cartasPaus = fakeStack._getItemsArray().filter((carta) => carta.naipe == Naipe.Paus);
 
         // deve ter 13 cartas de cada naipe
         expect(cartasEspadas).toHaveLength(13);
