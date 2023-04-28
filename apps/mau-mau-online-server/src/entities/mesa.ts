@@ -18,4 +18,8 @@ export class Mesa {
     public size() {
         return this.stack.size()
     }
+
+    public peek() {
+        return this.stack.peek()
+    }
 }

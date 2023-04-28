@@ -17,22 +17,36 @@ describe("Mesa entity", () => {
        expect(fakeStack.isEmpty()).toBeTruthy()
     })
 
-    test("deve botar uma carta qualquer no topo do monte, se ele estiver vazio", () => {
-        expect(fakeStack.size()).toBe(0)
+    test('deve retornar quantas cartas existem no monte', () => {
+        const stackSize = fakeStack.size()
+        expect(mesa.size()).toBe(stackSize)
+    })
+
+    test('deve visualizar a carta no topo do monte', () => {
+        expect(mesa.peek()).toBeUndefined()
+
         const carta: Carta = {
             naipe: Naipe.Espadas,
             numero: NumeroCarta.As
         }
 
         mesa.botarCarta(carta)
-        expect(fakeStack.size()).toBe(1)
+        expect(mesa.peek()).toBe(carta)
+    })
+
+    test("deve botar uma carta qualquer no topo do monte, se ele estiver vazio", () => {
+        expect(mesa.size()).toBe(0)
+        const carta: Carta = {
+            naipe: Naipe.Espadas,
+            numero: NumeroCarta.As
+        }
+
+        mesa.botarCarta(carta)
+        expect(mesa.size()).toBe(1)
         expect(fakeStack.peek()).toBe(carta)
     })
 
-    test('deve retornar quantas cartas existem no monte', () => {
-        const stackSize = fakeStack.size()
-        expect(mesa.size()).toBe(stackSize)
-    })
+
 
 
 })
