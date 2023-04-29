@@ -97,7 +97,7 @@ describe("Jogador entity", () => {
 
     })
 
-    test("deve litar todas as cartas que possui na lista", () => {
+    test("deve listar todas as cartas que possui na lista", () => {
         const carta0: Carta = {
             naipe: Naipe.Espadas,
             numero: NumeroCarta.As
