@@ -16,6 +16,7 @@ export class Baralho {
         for (const n in Naipe) {
             for (const carta in NumeroCarta) {
               const novaCarta: Carta = { naipe: Naipe[n as NaipeStrings], numero: NumeroCarta[carta as NumeroCartaStrings] }
+              Object.freeze(novaCarta);
               cartas.push(novaCarta)
             }
         }

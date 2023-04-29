@@ -70,6 +70,22 @@ describe("Baralho entity", () => {
         }
     });
 
+    test("uma carta não deve ter suas propriedades alteradas", () => {
+        const naipe = fakeStack.peek().naipe
+        const numero = fakeStack.peek().numero
+
+        const carta = baralho.tirarCarta()
+        expect(carta.naipe).toEqual(naipe)
+        expect(carta.numero).toEqual(numero)
+        
+        
+        expect(() => { carta.naipe = Naipe.Copas }).toThrow()
+        expect(() => { carta.numero = NumeroCarta.Dois }).toThrow()
+
+        expect(carta.naipe).toEqual(naipe)
+        expect(carta.numero).toEqual(numero)
+    })
+
     test("deve retirar uma carta do topo do monte", () => {
         const peek = fakeStack.peek()
         expect(fakeStack.size()).toBe(52)
