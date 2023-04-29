@@ -4,7 +4,7 @@ import { Stack } from "@/entities/stack";
 /**
  * Representa o monte de cartas colocadas de frente para cima na mesa
  */
-export class Mesa {
+export class PilhaDeDescarte {
     private stack: Stack<Carta>
 
     constructor(stack: Stack<Carta>) {

@@ -1,16 +1,16 @@
 import { Carta } from "@/entities/carta";
-import { Mesa } from "@/entities/mesa";
+import { PilhaDeDescarte } from "@/entities/pilha-de-descarte";
 import { Naipe } from "@/entities/naipe";
 import { NumeroCarta } from "@/entities/numero-carta";
 import { FakeStack } from "@test/doubles/fake-stack";
 
 describe("Mesa entity", () => {
     let fakeStack: FakeStack<Carta>;
-    let mesa: Mesa;
+    let mesa: PilhaDeDescarte;
 
     beforeEach(() => {
         fakeStack = new FakeStack<Carta>();
-        mesa = new Mesa(fakeStack);
+        mesa = new PilhaDeDescarte(fakeStack);
     });
 
     test("deve iniciar vazio de cartas", () => {
