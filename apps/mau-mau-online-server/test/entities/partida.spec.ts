@@ -118,101 +118,107 @@ describe("Partida entity", () => {
         expect(partida.currentJogador).toBe(0)
 
     })
-
-
-
-    test('um jogador pode pescar uma carta do baralho, se for a sua vez', () => {
-        partida.start()
-        expect(partida.baralho.size()).toBe(31)
-
-        const jogadorIndex = 0
-        expect(partida.jogadores[jogadorIndex].size()).toBe(7)
-        
-        const carta = partida.pescarCarta(jogadorIndex)
-        expect(partida.jogadores[jogadorIndex].size()).toBe(8)
-        expect(partida.jogadores[jogadorIndex].get(7)).toEqual(carta)
-        expect(partida.baralho.size()).toBe(30)
-    })
-
-    // TODO E se o jogadorIndex não existir?
-    test('um jogador não pode pescar uma carta do baralho, se não for a sua vez', () => {
-        partida.start()
-
-        const jogadorIndex = 1
-        expect(partida.jogadores[jogadorIndex].size()).toBe(7)
-        
-        expect(() => { partida.pescarCarta(jogadorIndex) }).toThrow('Não é a vez do jogador!')
-        expect(partida.jogadores[jogadorIndex].size()).toBe(7)
-    })
-
-    test('um jogador não pode pescar uma carta do baralho, se não houver mais cartas no baralho', () => {
-        mockedFakeStack.prototype.pop.mockImplementation(() => {
-            return ({
-                naipe: Naipe.Copas,
-                numero: NumeroCarta.Dez
-            })
-        });
-
-        const fakeStackBaralho = new FakeStack<Carta>()
-        const baralho = new Baralho(fakeStackBaralho)
-
-        partida = new Partida({ baralho, pilhaDeDescarte, jogadores: [ jogador1, jogador2, jogador3 ] })
-
-        partida.start()
-
-        mockedFakeStack.prototype.pop.mockImplementation(() => {
-            return undefined
-        });
-
-        const jogadorIndex = 0
-        expect(() => { partida.pescarCarta(jogadorIndex) }).toThrow('Não há mais cartas disponíveis no baralho!')
-    })
-
-    test('um jogador pode descartar carta, se for a sua vez', () => {
-        partida.start()
-
-        const jogadorIndex = 0
-        const cartaIndex = 3
-        expect(partida.jogadores[jogadorIndex].size()).toBe(7)
-        const { numero, naipe} = partida.jogadores[jogadorIndex].get(cartaIndex)
-        expect(partida.pilhaDeDescarte.size()).toBe(0)
-        
-        const cartaDescartada = partida.descartarCarta(jogadorIndex, cartaIndex)
-        expect(cartaDescartada).toEqual({ naipe, numero })
-        expect(partida.jogadores[jogadorIndex].contains(cartaDescartada)).toBeFalsy()
-        expect(partida.jogadores[jogadorIndex].size()).toBe(6)
-        expect(partida.pilhaDeDescarte.size()).toBe(1)
-        expect(partida.pilhaDeDescarte.peek()).toBe(cartaDescartada)
-    })
-
-    test('jum jogador não pode descartar carta, se não for a sua vez', () => {
-        partida.start()
-
-        const jogadorIndex = 1
-        const cartaIndex = 3
-        expect(partida.jogadores[jogadorIndex].size()).toBe(7)
-        expect(partida.pilhaDeDescarte.size()).toBe(0)
-
-        expect(() => { partida.descartarCarta(jogadorIndex, cartaIndex) }).toThrow('Não é a vez do jogador!')
-        expect(partida.jogadores[jogadorIndex].size()).toBe(7)
-        expect(partida.pilhaDeDescarte.size()).toBe(0)
-    })
-
-    test('jum jogador não pode descartar carta que não possui', () => {
-        partida.start()
-
-        const jogadorIndex = 0
-        const cartaIndex = 8
-        expect(partida.jogadores[jogadorIndex].size()).toBe(7)
-        expect(partida.pilhaDeDescarte.size()).toBe(0)
-
-        expect(() => { partida.descartarCarta(jogadorIndex, cartaIndex) }).toThrow('Index out of bounds')
-        expect(partida.jogadores[jogadorIndex].size()).toBe(7)
-        expect(partida.pilhaDeDescarte.size()).toBe(0)
-    })
     
+    describe('move', () => {
+        test('um jogador não pode jogar se a partida não estiver em andamento', () => {
+            // partida.start()
+    
+            expect(() => {  partida.move({ jogadorIndex: 1, moveType: 'PESCAR'}) }).toThrowError('A partida não está em andamento')
+           
+        })
+    
+        test('um jogador pode descartar uma carta se for a sua vez', () => {
+            partida.start()
 
+            const jogadorIndex = 0
+            const cartaIndex = 3
+            expect(partida.jogadores[jogadorIndex].size()).toBe(7)
+            const { numero, naipe } = partida.jogadores[jogadorIndex].get(cartaIndex)
+            expect(partida.pilhaDeDescarte.size()).toBe(0)
+
+            const cartaDescartada: Carta = partida.move({ jogadorIndex, moveType: 'DESCARTAR', cardIndex: cartaIndex })
+
+            expect(cartaDescartada).toEqual({ naipe, numero })
+            expect(partida.jogadores[jogadorIndex].contains(cartaDescartada)).toBeFalsy()
+            expect(partida.jogadores[jogadorIndex].size()).toBe(6)
+            expect(partida.pilhaDeDescarte.size()).toBe(1)
+            expect(partida.pilhaDeDescarte.peek()).toBe(cartaDescartada)
+        })
+
+        test('um jogador não pode descartar carta, se não for a sua vez', () => {
+            partida.start()
+    
+            const jogadorIndex = 1
+            const cartaIndex = 3
+            expect(partida.jogadores[jogadorIndex].size()).toBe(7)
+            expect(partida.pilhaDeDescarte.size()).toBe(0)
+    
+            expect(() => { partida.move({ jogadorIndex, moveType: 'DESCARTAR', cardIndex: cartaIndex }) }).toThrow('Não é a vez do jogador!')
+            expect(partida.jogadores[jogadorIndex].size()).toBe(7)
+            expect(partida.pilhaDeDescarte.size()).toBe(0)
+        })
+
+        test('um jogador não pode descartar carta que não possui', () => {
+            partida.start()
+    
+            const jogadorIndex = 0
+            const cartaIndex = 8
+            expect(partida.jogadores[jogadorIndex].size()).toBe(7)
+            expect(partida.pilhaDeDescarte.size()).toBe(0)
+    
+            expect(() => { partida.move({ jogadorIndex, moveType: 'DESCARTAR', cardIndex: cartaIndex }) }).toThrow('Index out of bounds')
+            expect(partida.jogadores[jogadorIndex].size()).toBe(7)
+            expect(partida.pilhaDeDescarte.size()).toBe(0)
+        })
+
+        
+        test('um jogador pode pescar uma carta do baralho, se for a sua vez', () => {
+            partida.start()
+            expect(partida.baralho.size()).toBe(31)
+    
+            const jogadorIndex = 0
+            expect(partida.jogadores[jogadorIndex].size()).toBe(7)
+            
+            const carta = partida.move({ jogadorIndex, moveType: "PESCAR" })
+            expect(partida.jogadores[jogadorIndex].size()).toBe(8)
+            expect(partida.jogadores[jogadorIndex].get(7)).toEqual(carta)
+            expect(partida.baralho.size()).toBe(30)
+        })
+
+        // TODO E se o jogadorIndex não existir?
+        test('um jogador não pode pescar uma carta do baralho, se não for a sua vez', () => {
+            partida.start()
+
+            const jogadorIndex = 1
+            expect(partida.jogadores[jogadorIndex].size()).toBe(7)
+            
+            expect(() => { partida.move({jogadorIndex, moveType: "PESCAR" }) }).toThrow('Não é a vez do jogador!')
+            expect(partida.jogadores[jogadorIndex].size()).toBe(7)
+        })
+
+        test('um jogador não pode pescar uma carta do baralho, se não houver mais cartas no baralho', () => {
+            mockedFakeStack.prototype.pop.mockImplementation(() => {
+                return ({
+                    naipe: Naipe.Copas,
+                    numero: NumeroCarta.Dez
+                })
+            });
+    
+            const fakeStackBaralho = new FakeStack<Carta>()
+            const baralho = new Baralho(fakeStackBaralho)
+    
+            partida = new Partida({ baralho, pilhaDeDescarte, jogadores: [ jogador1, jogador2, jogador3 ] })
+    
+            partida.start()
+    
+            mockedFakeStack.prototype.pop.mockImplementation(() => {
+                return undefined
+            });
+    
+            const jogadorIndex = 0
+            expect(() => { partida.move({jogadorIndex, moveType: "PESCAR" }) }).toThrow('Não há mais cartas disponíveis no baralho!')
+        })
+    })
     test.todo('should end partida')
-    test.todo('um jogador não pode jogar se a partida não estiver em andamento')
 
 })

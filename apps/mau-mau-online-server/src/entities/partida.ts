@@ -10,6 +10,14 @@ type PartidaOptions = {
     jogadores: Jogador[]
 }
 
+type MoveType = 'PESCAR' | 'DESCARTAR'
+
+type Move = {
+    jogadorIndex: number,
+    moveType: MoveType,
+    cardIndex?: number
+}
+
 export class Partida {
     public readonly baralho: Baralho
     public readonly pilhaDeDescarte: PilhaDeDescarte
@@ -40,7 +48,7 @@ export class Partida {
     /**
      * Retira uma carta do baralho virado para baixo e coloca na mão de um jogador
      */
-    public pescarCarta(jogadorIndex: number): Carta {
+    private pescarCarta(jogadorIndex: number): Carta {
         if(jogadorIndex !== this._currentJogador) { throw new Error('Não é a vez do jogador!') }
 
         const carta = this.baralho.tirarCarta()
@@ -51,14 +59,17 @@ export class Partida {
         return carta
     }
 
-    public descartarCarta(jogadorIndex: number, cartaIndex: number): Carta {
+    /**
+     * Retira uma carta da mão do jogador e colocar na pilha de descarte virada para cima
+     */
+    private descartarCarta(jogadorIndex: number, cartaIndex: number): Carta {
         if(jogadorIndex !== this._currentJogador) { throw new Error('Não é a vez do jogador!') }
 
         try {
             const carta = this.jogadores[jogadorIndex].tirarCartaAtIndex(cartaIndex)
     
             this.pilhaDeDescarte.botarCarta(carta)
-            
+
             return carta
         } catch(error) {
             throw error
@@ -93,6 +104,16 @@ export class Partida {
 
     public nextPlayer() {
         this._currentJogador = (this._currentJogador + 1) % this.jogadores.length
+    }
+
+    public move({ jogadorIndex, moveType, cardIndex }: Move) {
+        if(this._status !== StatusPartida.EM_ANDAMENTO) { throw new Error('A partida não está em andamento') }
+
+        if (moveType === 'DESCARTAR') {
+            return this.descartarCarta(jogadorIndex, cardIndex)
+        } else if(moveType === 'PESCAR') {
+            return this.pescarCarta(jogadorIndex)
+        } 
     }
 
 }
