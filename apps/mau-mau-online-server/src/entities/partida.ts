@@ -38,18 +38,24 @@ export class Partida {
 
     /**
      * Retira uma carta do baralho virado para baixo e coloca na mão de um jogador
-
      */
-    private pescarCarta(jogador: Jogador) {
+    public pescarCarta(jogadorIndex: number) {
+        if(jogadorIndex !== this._currentJogador) { throw new Error('Não é a vez do jogador!') }
+
         const carta = this.baralho.tirarCarta()
-        // TODO E SE NÃO HOUVER CARTAS?
-        jogador.botarCarta(carta)
+        if(!carta) { throw new Error('Não há mais cartas disponíveis no baralho!') }
+        
+        this.jogadores[jogadorIndex].botarCarta(carta)
+
+        return carta
     }
 
     private distribuirCartas() {
-        for(const jogador of this.jogadores) {
+        for(let jogadorIndex = 0; jogadorIndex < this.jogadores.length; jogadorIndex++) {
             for(let i = 0; i < this._cartasPorJogador; i++) {
-                this.pescarCarta(jogador)
+                const carta = this.baralho.tirarCarta()
+                // TODO E SE NÃO HOUVER CARTAS SUFICIENTES?
+                this.jogadores[jogadorIndex].botarCarta(carta)
             }
         }
     }

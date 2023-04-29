@@ -10,21 +10,36 @@ import { StatusPartida } from "@/entities/status-partida";
 describe("Partida entity", () => {
     let partida: Partida
 
+    let stackBaralho: Stack<Carta>
+    let baralho: Baralho
+
+    let stackDescarte: Stack<Carta>
+    let pilhaDeDescarte: PilhaDeDescarte
+
+    let cartasJogador1: ArrayList<Carta>
+    let jogador1: Jogador
+
+    let cartasJogador2: ArrayList<Carta>
+    let jogador2: Jogador
+
+    let cartasJogador3: ArrayList<Carta>
+    let jogador3: Jogador
+
     beforeEach(() => {
-        const stackBaralho = new Stack<Carta>()
-        const baralho = new Baralho(stackBaralho)
+        stackBaralho = new Stack<Carta>()
+        baralho = new Baralho(stackBaralho)
 
-        const stackDescarte = new Stack<Carta>()
-        const pilhaDeDescarte = new PilhaDeDescarte(stackDescarte)
+        stackDescarte = new Stack<Carta>()
+        pilhaDeDescarte = new PilhaDeDescarte(stackDescarte)
 
-        const cartasJogador1 = new ArrayList<Carta>()
-        const jogador1 = new Jogador(cartasJogador1)
+        cartasJogador1 = new ArrayList<Carta>()
+        jogador1 = new Jogador(cartasJogador1)
 
-        const cartasJogador2 = new ArrayList<Carta>()
-        const jogador2 = new Jogador(cartasJogador2)
+        cartasJogador2 = new ArrayList<Carta>()
+        jogador2 = new Jogador(cartasJogador2)
 
-        const cartasJogador3 = new ArrayList<Carta>()
-        const jogador3 = new Jogador(cartasJogador3)
+        cartasJogador3 = new ArrayList<Carta>()
+        jogador3 = new Jogador(cartasJogador3)
 
         partida = new Partida({ baralho, pilhaDeDescarte, jogadores: [ jogador1, jogador2, jogador3 ] })
     });
@@ -95,9 +110,42 @@ describe("Partida entity", () => {
         partida.nextPlayer()
         expect(partida.currentJogador).toBe(0)
 
-
-
     })
+
+    test('um jogador pode pescar uma carta, se for a sua vez', () => {
+        partida.start()
+
+        const jogadorIndex = 0
+        expect(partida.jogadores[jogadorIndex].size()).toBe(7)
+        
+        const carta = partida.pescarCarta(jogadorIndex)
+        expect(partida.jogadores[jogadorIndex].size()).toBe(8)
+        expect(partida.jogadores[jogadorIndex].get(7)).toEqual(carta)
+    })
+
+    // TODO E se o jogadorIndex não existir?
+    test('um jogador não pode pescar uma carta, se não for a sua vez', () => {
+        partida.start()
+
+        const jogadorIndex = 1
+        expect(partida.jogadores[jogadorIndex].size()).toBe(7)
+        
+        expect(() => { partida.pescarCarta(jogadorIndex) }).toThrow('Não é a vez do jogador!')
+        expect(partida.jogadores[jogadorIndex].size()).toBe(7)
+    })
+
+    test.skip('um jogador não pode pescar uma carta, se não houver mais cartas no baralho', () => {
+        partida.start()
+
+        const jogadorIndex = 0
+        expect(partida.jogadores[jogadorIndex].size()).toBe(7)
+        
+        expect(() => { partida.pescarCarta(jogadorIndex) }).toThrow('Não há mais cartas disponíveis no baralho!')
+        expect(partida.jogadores[jogadorIndex].size()).toBe(7)
+    })
+
+    test.todo('jogar/descartar carta')
+    
 
     test.todo('should end partida')
 
