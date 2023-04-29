@@ -29,7 +29,8 @@ describe('ArrayList', () => {
     arrayList.add('first');
     arrayList.add('second');
     arrayList.add('third');
-    arrayList.removeAtIndex(1);
+    const removed = arrayList.removeAtIndex(1);
+    expect(removed).toBe('second')
     expect(arrayList.size()).toBe(2);
     expect(arrayList.get(0)).toBe('first');
     expect(arrayList.get(1)).toBe('third');

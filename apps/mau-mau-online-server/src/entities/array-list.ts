@@ -51,11 +51,11 @@ export class ArrayList<T> {
       return true;
     }
   
-    removeAtIndex(index: number): void {
+    removeAtIndex(index: number): T {
       if (index < 0 || index >= this.size()) {
         throw new Error('Index out of bounds');
       }
-      this.elements.splice(index, 1);
+      return this.elements.splice(index, 1)[0];
     }
   
     set(index: number, element: T): void {
