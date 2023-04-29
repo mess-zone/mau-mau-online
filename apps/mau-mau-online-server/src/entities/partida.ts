@@ -48,6 +48,7 @@ export class Partida {
     /**
      * Retira uma carta do baralho virado para baixo e coloca na mão de um jogador
      */
+    // TODO permitir pescar mais de uma carta por vez
     private pescarCarta(jogadorIndex: number): Carta {
         if(jogadorIndex !== this._currentJogador) { throw new Error('Não é a vez do jogador!') }
 
@@ -62,6 +63,7 @@ export class Partida {
     /**
      * Retira uma carta da mão do jogador e colocar na pilha de descarte virada para cima
      */
+    // TODO permitir descartar mais de uma carta por vez
     private descartarCarta(jogadorIndex: number, cartaIndex: number): Carta {
         if(jogadorIndex !== this._currentJogador) { throw new Error('Não é a vez do jogador!') }
 
@@ -111,6 +113,7 @@ export class Partida {
         this._currentJogador = (this._currentJogador + 1) % this.jogadores.length
     }
 
+    // TODO antes de cada movimento deve haver uma validação, as validações devem seguir o principio Open Closed, e englobar as cartas especiais
     public move({ jogadorIndex, moveType, cardIndex }: Move) {
         if(this._status !== StatusPartida.EM_ANDAMENTO) { throw new Error('A partida não está em andamento') }
 
