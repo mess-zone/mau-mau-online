@@ -2,6 +2,7 @@ import { Carta } from "@/entities/carta"
 import { Naipe, NaipeStrings } from "@/entities/naipe"
 import { NumeroCarta, NumeroCartaStrings } from "@/entities/numero-carta";
 import { Stack } from "@/entities/stack";
+import { shuffleArray } from "@/utils/shuffle-array";
 
 
 /**
@@ -21,26 +22,11 @@ export class Baralho {
             }
         }
 
-        this.shuffleArray(cartas)
-
         this.stack = stack
-
-        for(const carta of cartas) {
+        for(const carta of shuffleArray(cartas)) {
             this.stack.push(carta)
         }
 
-    }
-
-    /**
-     * Fisher-Yates algorithm
-     */
-    private shuffleArray(array: Carta[]) {
-        for (let i = array.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            const temp = array[i];
-            array[i] = array[j];
-            array[j] = temp;
-        }
     }
 
     public tirarCarta() {
