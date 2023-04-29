@@ -14,7 +14,7 @@ describe("Mesa entity", () => {
     });
 
     test("deve iniciar vazio de cartas", () => {
-       expect(fakeStack.isEmpty()).toBeTruthy()
+       expect(mesa.size()).toBe(0)
     })
 
     test('deve retornar quantas cartas existem no monte', () => {
