@@ -66,12 +66,16 @@ export class Partida {
         if(jogadorIndex !== this._currentJogador) { throw new Error('Não é a vez do jogador!') }
 
         try {
-            const carta = this.jogadores[jogadorIndex].tirarCartaAtIndex(cartaIndex)
+            if(this.pilhaDeDescarte.validateMove(this.jogadores[jogadorIndex].get(cartaIndex))) {
+                const carta = this.jogadores[jogadorIndex].tirarCartaAtIndex(cartaIndex)
+        
+                this.pilhaDeDescarte.botarCarta(carta)
     
-            this.pilhaDeDescarte.botarCarta(carta)
+                this.nextPlayer()
+                return carta
+            } 
 
-            this.nextPlayer()
-            return carta
+            throw new Error('Movimento não permitido!')
         } catch(error) {
             throw error
         }

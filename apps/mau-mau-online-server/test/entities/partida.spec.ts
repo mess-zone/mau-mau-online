@@ -33,6 +33,7 @@ describe("Partida entity", () => {
     let jogador3: Jogador
 
     beforeEach(() => {
+        mockedFakeStack.mockClear()
         stackBaralho = new Stack<Carta>()
         baralho = new Baralho(stackBaralho)
 
@@ -240,8 +241,42 @@ describe("Partida entity", () => {
             expect(partida.currentJogador).toBe(0)
 
         })
-    })
+
+        test('se o jogador tentar descartar uma carta que não é valida para a mesa (naipe ou numero diferente), ele não passou a vez e deve jogar novamente', () => {
+            mockedFakeStack.prototype.pop
+                .mockReturnValueOnce({ naipe: Naipe.Ouros, numero: NumeroCarta.Quatro })
+                .mockReturnValueOnce({ naipe: Naipe.Ouros, numero: NumeroCarta.Quatro })
+                .mockReturnValueOnce({ naipe: Naipe.Ouros, numero: NumeroCarta.Quatro })
+                .mockReturnValueOnce({ naipe: Naipe.Ouros, numero: NumeroCarta.Quatro })
+                .mockReturnValueOnce({ naipe: Naipe.Ouros, numero: NumeroCarta.Quatro })
+                .mockReturnValueOnce({ naipe: Naipe.Ouros, numero: NumeroCarta.Quatro })
+                .mockReturnValueOnce({ naipe: Naipe.Ouros, numero: NumeroCarta.Quatro })
+
+                .mockReturnValueOnce({ naipe: Naipe.Paus, numero: NumeroCarta.Cinco })
+                .mockReturnValueOnce({ naipe: Naipe.Paus, numero: NumeroCarta.Cinco })
+                .mockReturnValueOnce({ naipe: Naipe.Paus, numero: NumeroCarta.Cinco })
+                .mockReturnValueOnce({ naipe: Naipe.Paus, numero: NumeroCarta.Cinco })
+                .mockReturnValueOnce({ naipe: Naipe.Paus, numero: NumeroCarta.Cinco })
+                .mockReturnValueOnce({ naipe: Naipe.Paus, numero: NumeroCarta.Cinco })
+                .mockReturnValueOnce({ naipe: Naipe.Paus, numero: NumeroCarta.Cinco })
+
     
+            const fakeStackBaralho = new FakeStack<Carta>()
+            const baralho = new Baralho(fakeStackBaralho)
+    
+            partida = new Partida({ baralho, pilhaDeDescarte, jogadores: [ jogador1, jogador2 ] })
+    
+            partida.start()
+
+
+            partida.move({ jogadorIndex: 0, moveType: "DESCARTAR", cardIndex: 0 })
+            expect(partida.currentJogador).toBe(1)
+            
+            expect(() => { partida.move({ jogadorIndex: 1, moveType: "DESCARTAR", cardIndex: 0 }) }).toThrow("Movimento não permitido!")
+            expect(partida.currentJogador).toBe(1)
+        })
+    })
+
     test.todo('should end partida')
 
 })
