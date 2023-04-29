@@ -15,7 +15,7 @@ export class Partida {
     public readonly jogadores: Jogador[]
 
     private _status: StatusPartida
-    private _currentJogador: number
+    private _currentJogador: number = -1
     private _cartasPorJogador: number = 7
 
 
@@ -58,8 +58,8 @@ export class Partida {
     public start() {
         if(this.jogadores.length >= 2) {
             this._status = StatusPartida.EM_ANDAMENTO
-            this._currentJogador = 0
             this.distribuirCartas()
+            this.nextPlayer()
             return true
         }
         return false
@@ -69,5 +69,8 @@ export class Partida {
         this._status = StatusPartida.CANCELADA
     }
 
+    public nextPlayer() {
+        this._currentJogador = (this._currentJogador + 1) % this.jogadores.length
+    }
 
 }

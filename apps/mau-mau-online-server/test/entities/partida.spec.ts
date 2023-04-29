@@ -35,6 +35,8 @@ describe("Partida entity", () => {
         expect(partida.jogadores[0].size()).toBe(0)
         expect(partida.jogadores[1].size()).toBe(0)
         expect(partida.jogadores[2].size()).toBe(0)
+
+        expect(partida.currentJogador).toBe(-1)
         
         const started = partida.start()
 
@@ -81,6 +83,22 @@ describe("Partida entity", () => {
         
         
     })
+
+    test('deve revezar a vez de jogar entre os jogadores, no sentido horário', () => {
+        partida.start()
+
+        expect(partida.currentJogador).toBe(0)
+        partida.nextPlayer()
+        expect(partida.currentJogador).toBe(1)
+        partida.nextPlayer()
+        expect(partida.currentJogador).toBe(2)
+        partida.nextPlayer()
+        expect(partida.currentJogador).toBe(0)
+
+
+
+    })
+
     test.todo('should end partida')
 
 })
