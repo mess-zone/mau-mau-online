@@ -31,10 +31,25 @@ describe("Partida entity", () => {
 
     test('deve iniciar partida se houver ao menos 2 jogadores', () => {
         expect(partida.status).toBe(StatusPartida.PENDENTE)
+        
+        expect(partida.jogadores[0].size()).toBe(0)
+        expect(partida.jogadores[1].size()).toBe(0)
+        expect(partida.jogadores[2].size()).toBe(0)
+        
         const started = partida.start()
+
+        // atualiza o status para EM ANDAMENTO
         expect(started).toBeTruthy()
         expect(partida.status).toBe(StatusPartida.EM_ANDAMENTO)
         expect(partida.currentJogador).toBe(0)
+
+        // distribui as cartas do baralho
+        expect(partida.jogadores[0].size()).toBe(7)
+        expect(partida.jogadores[1].size()).toBe(7)
+        expect(partida.jogadores[2].size()).toBe(7)
+        expect(partida.baralho.size()).toBe(52 - (7 * 3))
+
+
     })
 
     test('não deve iniciar partida se não houver ao menos 2 jogadores', () => {
@@ -52,6 +67,9 @@ describe("Partida entity", () => {
         const started = partida.start()
         expect(started).toBeFalsy()
         expect(partida.status).toBe(StatusPartida.PENDENTE)
+
+        expect(partida.baralho.size()).toBe(52)
+
     })
 
     test('deve cancelar partida', () => {

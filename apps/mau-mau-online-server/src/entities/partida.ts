@@ -14,8 +14,11 @@ export class Partida {
     public readonly pilhaDeDescarte: PilhaDeDescarte
     public readonly jogadores: Jogador[]
 
-    public _status: StatusPartida
-    public _currentJogador: number
+    private _status: StatusPartida
+    private _currentJogador: number
+    private _cartasPorJogador: number = 7
+
+
 
     constructor({ baralho, pilhaDeDescarte, jogadores }: PartidaOptions) {
         this.baralho = baralho
@@ -33,16 +36,38 @@ export class Partida {
         return this._currentJogador
     }
 
-    start() {
+    /**
+     * Retira uma carta do baralho virado para baixo e coloca na mão de um jogador
+
+     */
+    private pescarCarta(jogador: Jogador) {
+        const carta = this.baralho.tirarCarta()
+        // TODO E SE NÃO HOUVER CARTAS?
+        jogador.botarCarta(carta)
+    }
+
+    private distribuirCartas() {
+        for(const jogador of this.jogadores) {
+            for(let i = 0; i < this._cartasPorJogador; i++) {
+                this.pescarCarta(jogador)
+            }
+        }
+    }
+
+
+    public start() {
         if(this.jogadores.length >= 2) {
             this._status = StatusPartida.EM_ANDAMENTO
             this._currentJogador = 0
+            this.distribuirCartas()
             return true
         }
         return false
     }
 
-    cancel() {
+    public cancel() {
         this._status = StatusPartida.CANCELADA
     }
+
+
 }
