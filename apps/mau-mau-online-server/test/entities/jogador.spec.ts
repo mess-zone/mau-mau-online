@@ -96,4 +96,31 @@ describe("Jogador entity", () => {
         expect(jogador.contains(carta1)).toBeFalsy()
 
     })
+
+    test("deve litar todas as cartas que possui na lista", () => {
+        const carta0: Carta = {
+            naipe: Naipe.Espadas,
+            numero: NumeroCarta.As
+        }
+
+        const carta1: Carta = {
+            naipe: Naipe.Copas,
+            numero: NumeroCarta.Cinco
+        }
+
+        const carta2: Carta = {
+            naipe: Naipe.Ouros,
+            numero: NumeroCarta.Rei
+        }
+
+        jogador.botarCarta(carta0)
+        jogador.botarCarta(carta1)
+        jogador.botarCarta(carta2)
+
+        const cartas = [...jogador.iterator()]
+        expect(cartas).toHaveLength(3)
+        expect(cartas[0]).toEqual(carta0)
+        expect(cartas[1]).toEqual(carta1)
+        expect(cartas[2]).toEqual(carta2)
+    })
 })

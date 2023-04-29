@@ -38,4 +38,8 @@ export class Jogador {
     public indexOf(carta: Carta) {
         return this.list.indexOf(carta)
     }
+
+    public *iterator() {
+        yield* this.list.iterator()
+    }
 }
