@@ -2,10 +2,17 @@ import { ArrayList } from "@/entities/array-list";
 import { Baralho } from "@/entities/baralho";
 import { Carta } from "@/entities/carta";
 import { Jogador } from "@/entities/jogador";
+import { Naipe } from "@/entities/naipe";
+import { NumeroCarta } from "@/entities/numero-carta";
 import { Partida } from "@/entities/partida"
 import { PilhaDeDescarte } from "@/entities/pilha-de-descarte";
 import { Stack } from "@/entities/stack";
 import { StatusPartida } from "@/entities/status-partida";
+import { FakeStack } from "@test/doubles/fake-stack";
+
+jest.mock('../doubles/fake-stack');
+
+let mockedFakeStack = jest.mocked(FakeStack);
 
 describe("Partida entity", () => {
     let partida: Partida
@@ -134,19 +141,33 @@ describe("Partida entity", () => {
         expect(partida.jogadores[jogadorIndex].size()).toBe(7)
     })
 
-    test.skip('um jogador não pode pescar uma carta, se não houver mais cartas no baralho', () => {
+    test('um jogador não pode pescar uma carta, se não houver mais cartas no baralho', () => {
+        mockedFakeStack.prototype.pop.mockImplementation(() => {
+            return ({
+                naipe: Naipe.Copas,
+                numero: NumeroCarta.Dez
+            })
+        });
+
+        const fakeStackBaralho = new FakeStack<Carta>()
+        const baralho = new Baralho(fakeStackBaralho)
+
+        partida = new Partida({ baralho, pilhaDeDescarte, jogadores: [ jogador1, jogador2, jogador3 ] })
+
         partida.start()
 
+        mockedFakeStack.prototype.pop.mockImplementation(() => {
+            return undefined
+        });
+
         const jogadorIndex = 0
-        expect(partida.jogadores[jogadorIndex].size()).toBe(7)
-        
         expect(() => { partida.pescarCarta(jogadorIndex) }).toThrow('Não há mais cartas disponíveis no baralho!')
-        expect(partida.jogadores[jogadorIndex].size()).toBe(7)
     })
 
     test.todo('jogar/descartar carta')
     
 
     test.todo('should end partida')
+    test.todo('um jogador não pode jogar se a partida não estiver em andamento')
 
 })

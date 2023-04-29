@@ -44,7 +44,7 @@ export class Partida {
 
         const carta = this.baralho.tirarCarta()
         if(!carta) { throw new Error('Não há mais cartas disponíveis no baralho!') }
-        
+
         this.jogadores[jogadorIndex].botarCarta(carta)
 
         return carta
