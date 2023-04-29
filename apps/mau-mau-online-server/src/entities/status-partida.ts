@@ -1,4 +1,5 @@
 export enum StatusPartida {
     PENDENTE = 'Pendente',
-    EM_ANDAMENTO = 'Em andamento'
+    EM_ANDAMENTO = 'Em andamento',
+    CANCELADA = 'Cancelada',
 }

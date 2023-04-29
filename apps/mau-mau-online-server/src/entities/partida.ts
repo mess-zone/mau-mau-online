@@ -41,4 +41,8 @@ export class Partida {
         }
         return false
     }
+
+    cancel() {
+        this._status = StatusPartida.CANCELADA
+    }
 }

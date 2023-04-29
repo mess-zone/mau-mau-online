@@ -54,7 +54,15 @@ describe("Partida entity", () => {
         expect(partida.status).toBe(StatusPartida.PENDENTE)
     })
 
-    test.todo('should cancel partida')
+    test('deve cancelar partida', () => {
+        partida.start()
+        expect(partida.status).toBe(StatusPartida.EM_ANDAMENTO)
+
+        partida.cancel()
+        expect(partida.status).toBe(StatusPartida.CANCELADA)
+        
+        
+    })
     test.todo('should end partida')
 
 })
