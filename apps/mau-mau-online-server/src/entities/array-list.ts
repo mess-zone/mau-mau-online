@@ -68,4 +68,10 @@ export class ArrayList<T> {
     size(): number {
       return this.elements.length;
     }
+
+    *iterator() {
+      for(const element of this.elements) {
+        yield element
+      }
+    }
   }

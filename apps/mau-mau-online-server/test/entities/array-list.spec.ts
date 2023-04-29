@@ -76,4 +76,18 @@ describe('ArrayList', () => {
     expect(arrayList.indexOf('third')).toBe(2);
     expect(arrayList.indexOf('other')).toBe(-1);
   });
+
+  it('should return a list of all elements', () => {
+    arrayList.add('first');
+    arrayList.add('second');
+    arrayList.add('third')
+
+    const cartas = [...arrayList.iterator()]
+    expect(cartas).toHaveLength(3)
+    expect(cartas[0]).toBe('first')
+    expect(cartas[1]).toBe('second')
+    expect(cartas[2]).toBe('third')
+  });
+
+
 });
