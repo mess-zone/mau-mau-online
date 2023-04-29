@@ -70,6 +70,7 @@ export class Partida {
     
             this.pilhaDeDescarte.botarCarta(carta)
 
+            this.nextPlayer()
             return carta
         } catch(error) {
             throw error
@@ -102,7 +103,7 @@ export class Partida {
         this._status = StatusPartida.CANCELADA
     }
 
-    public nextPlayer() {
+    private nextPlayer() {
         this._currentJogador = (this._currentJogador + 1) % this.jogadores.length
     }
 

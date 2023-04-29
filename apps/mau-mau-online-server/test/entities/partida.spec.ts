@@ -105,19 +105,6 @@ describe("Partida entity", () => {
         
         
     })
-
-    test('deve revezar a vez de jogar entre os jogadores, no sentido horário', () => {
-        partida.start()
-
-        expect(partida.currentJogador).toBe(0)
-        partida.nextPlayer()
-        expect(partida.currentJogador).toBe(1)
-        partida.nextPlayer()
-        expect(partida.currentJogador).toBe(2)
-        partida.nextPlayer()
-        expect(partida.currentJogador).toBe(0)
-
-    })
     
     describe('move', () => {
         test('um jogador não pode jogar se a partida não estiver em andamento', () => {
@@ -218,7 +205,43 @@ describe("Partida entity", () => {
             const jogadorIndex = 0
             expect(() => { partida.move({jogadorIndex, moveType: "PESCAR" }) }).toThrow('Não há mais cartas disponíveis no baralho!')
         })
+
+        test('um jogador pode pescar quantas cartas quiser, mas quando ele descarta uma carta, a vez de jogar passa para o próximo jogador', () => {
+            mockedFakeStack.prototype.pop.mockImplementation(() => {
+                return ({
+                    naipe: Naipe.Copas,
+                    numero: NumeroCarta.Dez
+                })
+            });
+    
+            const fakeStackBaralho = new FakeStack<Carta>()
+            const baralho = new Baralho(fakeStackBaralho)
+    
+            partida = new Partida({ baralho, pilhaDeDescarte, jogadores: [ jogador1, jogador2, jogador3 ] })
+    
+            partida.start()
+
+            partida.move({ jogadorIndex: 0, moveType: "PESCAR" })
+            expect(partida.currentJogador).toBe(0)
+            partida.move({ jogadorIndex: 0, moveType: "PESCAR" })
+            expect(partida.currentJogador).toBe(0)
+            expect(() => { partida.move({ jogadorIndex: 1, moveType: "PESCAR" }) }).toThrow("Não é a vez do jogador!")
+            
+            partida.move({ jogadorIndex: 0, moveType: "DESCARTAR", cardIndex: 0 })
+            expect(partida.currentJogador).toBe(1)
+            expect(() => { partida.move({ jogadorIndex: 0, moveType: "DESCARTAR", cardIndex: 0 }) }).toThrow("Não é a vez do jogador!")
+            
+            partida.move({ jogadorIndex: 1, moveType: "PESCAR" })
+            expect(partida.currentJogador).toBe(1)
+            partida.move({ jogadorIndex: 1, moveType: "DESCARTAR", cardIndex: 0 })
+            expect(partida.currentJogador).toBe(2)
+
+            partida.move({ jogadorIndex: 2, moveType: "DESCARTAR", cardIndex: 0 })
+            expect(partida.currentJogador).toBe(0)
+
+        })
     })
+    
     test.todo('should end partida')
 
 })
