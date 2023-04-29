@@ -19,6 +19,14 @@ export class Jogador {
         this.list.add(carta)
     }
 
+    public tirarCarta(carta: Carta) {
+        return this.list.remove(carta)
+    }
+
+    public tirarCartaAtIndex(index: number) {
+        return this.list.removeAtIndex(index)
+    }
+
     public contains(carta: Carta) {
         return this.list.contains(carta)
     }
