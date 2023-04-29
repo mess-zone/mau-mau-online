@@ -1,7 +1,8 @@
 import { Baralho } from "@/entities/baralho";
-import { PilhaDeDescarte } from "./pilha-de-descarte";
-import { Jogador } from "./jogador";
-import { StatusPartida } from "./status-partida";
+import { PilhaDeDescarte } from "@/entities/pilha-de-descarte";
+import { Jogador } from "@/entities/jogador";
+import { StatusPartida } from "@/entities/status-partida";
+import { Carta } from "@/entities/carta";
 
 type PartidaOptions = { 
     baralho: Baralho,
@@ -39,7 +40,7 @@ export class Partida {
     /**
      * Retira uma carta do baralho virado para baixo e coloca na mão de um jogador
      */
-    public pescarCarta(jogadorIndex: number) {
+    public pescarCarta(jogadorIndex: number): Carta {
         if(jogadorIndex !== this._currentJogador) { throw new Error('Não é a vez do jogador!') }
 
         const carta = this.baralho.tirarCarta()
@@ -48,6 +49,21 @@ export class Partida {
         this.jogadores[jogadorIndex].botarCarta(carta)
 
         return carta
+    }
+
+    public descartarCarta(jogadorIndex: number, cartaIndex: number): Carta {
+        if(jogadorIndex !== this._currentJogador) { throw new Error('Não é a vez do jogador!') }
+
+        try {
+            const carta = this.jogadores[jogadorIndex].tirarCartaAtIndex(cartaIndex)
+    
+            this.pilhaDeDescarte.botarCarta(carta)
+            
+            return carta
+        } catch(error) {
+            throw error
+        }
+
     }
 
     private distribuirCartas() {
