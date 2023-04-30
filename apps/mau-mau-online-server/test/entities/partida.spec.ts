@@ -121,12 +121,12 @@ describe("Partida entity", () => {
             const jogadorIndex = 0
             const cartaIndex = 3
             expect(partida.jogadores[jogadorIndex].size()).toBe(7)
-            const { numero, naipe } = partida.jogadores[jogadorIndex].get(cartaIndex)
+            const { id, numero, naipe } = partida.jogadores[jogadorIndex].get(cartaIndex)
             expect(partida.pilhaDeDescarte.size()).toBe(0)
 
             const cartaDescartada: Carta = partida.move({ jogadorIndex, moveType: 'DESCARTAR', cardIndex: cartaIndex })
 
-            expect(cartaDescartada).toEqual({ naipe, numero })
+            expect(cartaDescartada).toEqual({ id, naipe, numero })
             expect(partida.jogadores[jogadorIndex].contains(cartaDescartada)).toBeFalsy()
             expect(partida.jogadores[jogadorIndex].size()).toBe(6)
             expect(partida.pilhaDeDescarte.size()).toBe(1)
