@@ -78,18 +78,23 @@ describe("Baralho entity", () => {
         expect(carta.naipe).toBeDefined()
         expect(carta.numero).toBeDefined()
     })
+
     test("uma carta não deve ter suas propriedades alteradas", () => {
+        const id = fakeStack.peek().id
         const naipe = fakeStack.peek().naipe
         const numero = fakeStack.peek().numero
 
         const carta = baralho.tirarCarta()
+        expect(carta.id).toEqual(id)
         expect(carta.naipe).toEqual(naipe)
         expect(carta.numero).toEqual(numero)
         
         
+        expect(() => { carta.id = 'dfsf' }).toThrow()
         expect(() => { carta.naipe = Naipe.Copas }).toThrow()
         expect(() => { carta.numero = NumeroCarta.Dois }).toThrow()
 
+        expect(carta.id).toEqual(id)
         expect(carta.naipe).toEqual(naipe)
         expect(carta.numero).toEqual(numero)
     })
