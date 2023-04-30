@@ -75,35 +75,35 @@ describe("Jogador entity", () => {
 
     })
 
-    test("deve tirar uma carta de uma posição da lista", () => {
-        const carta0: Carta = {
-            id: 'id0',
-            naipe: Naipe.Espadas,
-            numero: NumeroCarta.As
-        }
+    // test("deve tirar uma carta de uma posição da lista", () => {
+    //     const carta0: Carta = {
+    //         id: 'id0',
+    //         naipe: Naipe.Espadas,
+    //         numero: NumeroCarta.As
+    //     }
 
-        const carta1: Carta = {
-            id: 'id1',
-            naipe: Naipe.Copas,
-            numero: NumeroCarta.Cinco
-        }
+    //     const carta1: Carta = {
+    //         id: 'id1',
+    //         naipe: Naipe.Copas,
+    //         numero: NumeroCarta.Cinco
+    //     }
 
-        const carta2: Carta = {
-            id: 'id2',
-            naipe: Naipe.Ouros,
-            numero: NumeroCarta.Rei
-        }
+    //     const carta2: Carta = {
+    //         id: 'id2',
+    //         naipe: Naipe.Ouros,
+    //         numero: NumeroCarta.Rei
+    //     }
 
-        jogador.botarCarta(carta0)
-        jogador.botarCarta(carta1)
-        jogador.botarCarta(carta2)
+    //     jogador.botarCarta(carta0)
+    //     jogador.botarCarta(carta1)
+    //     jogador.botarCarta(carta2)
 
-        const cartaRetirada = jogador.tirarCartaAtIndex(1)
-        expect(cartaRetirada).toEqual(carta1)
-        expect(jogador.size()).toEqual(2)
-        expect(jogador.contains(carta1)).toBeFalsy()
+    //     const cartaRetirada = jogador.tirarCartaAtIndex(1)
+    //     expect(cartaRetirada).toEqual(carta1)
+    //     expect(jogador.size()).toEqual(2)
+    //     expect(jogador.contains(carta1)).toBeFalsy()
 
-    })
+    // })
 
     test("deve listar todas as cartas que possui na lista", () => {
         const carta0: Carta = {
