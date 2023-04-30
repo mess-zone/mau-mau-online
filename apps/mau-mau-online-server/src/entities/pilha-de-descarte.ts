@@ -12,15 +12,22 @@ export class PilhaDeDescarte {
     }
 
     /**
-     * Retorna true se é permitido colocar a carta no monte
-     * @param carta 
+     * Retorna true se é permitido colocar as cartas no monte
+     * @param cartas 
      */
-    public validateMove(carta: Carta) {
+    public validateMove(cartas: Carta[]) {
+        // todas as cartas devem ter o mesmo naipe e número
+        if(cartas.length > 1) {
+            if(!cartas.every((carta) => carta.naipe == cartas[0].naipe || carta.numero == cartas[0].numero)) {
+                return false
+            }
+        }
+
         // se o monte estiver vazio, aceita qualquer carta
         if(this.size() == 0) return true
 
-        // aceita carta com o mesmo naipe ou numero do topo do monte
-        if(carta.naipe == this.peek().naipe || carta.numero == this.peek().numero) {
+        // aceita cartas com o mesmo naipe ou numero do topo do monte
+        if(cartas.every((carta) => carta.naipe == this.peek().naipe || carta.numero == this.peek().numero)) {
             return true
         }
 
