@@ -3,6 +3,7 @@ import { Carta } from "@/entities/carta";
 import { Naipe } from "@/entities/naipe";
 import { NumeroCarta, NumeroCartaStrings } from "@/entities/numero-carta";
 import { FakeStack } from "@test/doubles/fake-stack";
+import { validate as uuidValidate } from 'uuid';
 
 describe("Baralho entity", () => {
     let fakeStack: FakeStack<Carta>;
@@ -70,6 +71,13 @@ describe("Baralho entity", () => {
         }
     });
 
+    test("uma carta deve ter um id único, numero e naipe", () => {
+        const carta = baralho.tirarCarta()
+
+        expect(uuidValidate(carta.id)).toBeTruthy()
+        expect(carta.naipe).toBeDefined()
+        expect(carta.numero).toBeDefined()
+    })
     test("uma carta não deve ter suas propriedades alteradas", () => {
         const naipe = fakeStack.peek().naipe
         const numero = fakeStack.peek().numero
