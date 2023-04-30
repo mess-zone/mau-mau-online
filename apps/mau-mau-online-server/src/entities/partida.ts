@@ -81,7 +81,7 @@ export class Partida {
 
         try {
             // TODO é preciso verificar se as cartas realmente pertencem ao jogador
-            // TODO Dvalidade move deveria retornar uma exceção com a mensagem
+            // TODO validate move deveria retornar uma exceção com a mensagem
             if(this.pilhaDeDescarte.validateMove(cartas)) {
                 
                 // const cartasDescartadas: Carta[] = []
@@ -131,7 +131,8 @@ export class Partida {
         this._currentJogador = (this._currentJogador + 1) % this.jogadores.length
     }
 
-    // TODO antes de cada movimento deve haver uma validação, as validações devem seguir o principio Open Closed, e englobar as cartas especiais
+    // TODO o descartar deve receber uma lista de ids de cartas para descartar
+    // TODO antes de cada movimento deve haver uma validação (de penalidades dos jogador corrente), as validações devem seguir o principio Open Closed, e englobar as cartas especiais
     public move({ jogadorIndex, moveType, cartas, qtd }: Move) {
         if(this._status !== StatusPartida.EM_ANDAMENTO) { throw new Error('A partida não está em andamento') }
 

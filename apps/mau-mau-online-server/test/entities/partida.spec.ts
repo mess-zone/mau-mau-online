@@ -291,7 +291,7 @@ describe("Partida entity", () => {
             expect(partida.currentJogador).toBe(0)
             expect(() => { partida.move({ jogadorIndex: 1, moveType: "PESCAR" }) }).toThrow("Não é a vez do jogador!")
             
-            // TODO é muito estranho ter que passar o index do jogador e a carta, porque ainda falta verificar se a carta pertence ao jogador...
+            // TODO é muito estranho ter que passar o index do jogador e a carta, porque ainda falta verificar se a carta pertence ao jogador, seria melhor passar o id da carta
             partida.move({ jogadorIndex: 0, moveType: "DESCARTAR", cartas: [partida.jogadores[0].get(1)] })
             expect(partida.currentJogador).toBe(1)
             expect(() => { partida.move({ jogadorIndex: 0, moveType: "DESCARTAR", cartas: [partida.jogadores[0].get(1)] }) }).toThrow("Não é a vez do jogador!")
