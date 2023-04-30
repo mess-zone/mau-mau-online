@@ -26,6 +26,7 @@ describe("Mesa entity", () => {
         expect(mesa.peek()).toBeUndefined()
 
         const carta: Carta = {
+            id: 'id0',
             naipe: Naipe.Espadas,
             numero: NumeroCarta.As
         }
@@ -37,6 +38,7 @@ describe("Mesa entity", () => {
     test("deve botar uma carta qualquer no topo do monte", () => {
         expect(mesa.size()).toBe(0)
         const carta: Carta = {
+            id: 'id0',
             naipe: Naipe.Espadas,
             numero: NumeroCarta.As
         }
@@ -49,6 +51,7 @@ describe("Mesa entity", () => {
     describe('validação de movimentos', () => {
         test("deve aceitar botar qualquer carta no topo do monte vazio", () => {
             const carta: Carta = {
+                id: 'id0',
                 naipe: Naipe.Espadas,
                 numero: NumeroCarta.As
             }
@@ -58,12 +61,14 @@ describe("Mesa entity", () => {
     
         test("deve permitir botar uma carta com o mesmo naipe da carta no topo do monte", () => {
             const carta1: Carta = {
+                id: 'id1',
                 naipe: Naipe.Espadas,
                 numero: NumeroCarta.As
             }
             mesa.botarCarta(carta1)
 
             const carta2: Carta = {
+                id: 'id2',
                 naipe: Naipe.Espadas,
                 numero: NumeroCarta.Tres
             }
@@ -73,12 +78,14 @@ describe("Mesa entity", () => {
    
         test("deve permitir botar uma carta com o mesmo numero da carta no topo do monte", () => {
             const carta1: Carta = {
+                id: 'id1',
                 naipe: Naipe.Espadas,
                 numero: NumeroCarta.As
             }
             mesa.botarCarta(carta1)
 
             const carta2: Carta = {
+                id: 'id2',
                 naipe: Naipe.Ouros,
                 numero: NumeroCarta.As
             }
@@ -88,12 +95,14 @@ describe("Mesa entity", () => {
  
         test("não deve permitir botar uma carta com numero e naipe diferente da carta no topo do monte", () => {
             const carta1: Carta = {
+                id: 'id2',
                 naipe: Naipe.Espadas,
                 numero: NumeroCarta.As
             }
             mesa.botarCarta(carta1)
 
             const carta2: Carta = {
+                id: 'id2',
                 naipe: Naipe.Ouros,
                 numero: NumeroCarta.Tres
             }
