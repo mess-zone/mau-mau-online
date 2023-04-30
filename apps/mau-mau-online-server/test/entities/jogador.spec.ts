@@ -22,6 +22,7 @@ describe("Jogador entity", () => {
         expect(jogador.size()).toBe(0)
         
         const carta0: Carta = {
+            id: 'id0',
             naipe: Naipe.Espadas,
             numero: NumeroCarta.As
         }
@@ -33,6 +34,7 @@ describe("Jogador entity", () => {
         expect(jogador.indexOf(carta0)).toEqual(0)
         
         const carta1: Carta = {
+            id: 'id1',
             naipe: Naipe.Copas,
             numero: NumeroCarta.Cinco
         }
@@ -46,16 +48,19 @@ describe("Jogador entity", () => {
 
     test("deve tirar uma carta da lista", () => {
         const carta0: Carta = {
+            id: 'id0',
             naipe: Naipe.Espadas,
             numero: NumeroCarta.As
         }
 
         const carta1: Carta = {
+            id: 'id1',
             naipe: Naipe.Copas,
             numero: NumeroCarta.Cinco
         }
 
         const carta2: Carta = {
+            id: 'id2',
             naipe: Naipe.Ouros,
             numero: NumeroCarta.Rei
         }
@@ -72,16 +77,19 @@ describe("Jogador entity", () => {
 
     test("deve tirar uma carta de uma posição da lista", () => {
         const carta0: Carta = {
+            id: 'id0',
             naipe: Naipe.Espadas,
             numero: NumeroCarta.As
         }
 
         const carta1: Carta = {
+            id: 'id1',
             naipe: Naipe.Copas,
             numero: NumeroCarta.Cinco
         }
 
         const carta2: Carta = {
+            id: 'id2',
             naipe: Naipe.Ouros,
             numero: NumeroCarta.Rei
         }
@@ -99,16 +107,19 @@ describe("Jogador entity", () => {
 
     test("deve listar todas as cartas que possui na lista", () => {
         const carta0: Carta = {
+            id: 'id0',
             naipe: Naipe.Espadas,
             numero: NumeroCarta.As
         }
 
         const carta1: Carta = {
+            id: 'id1',
             naipe: Naipe.Copas,
             numero: NumeroCarta.Cinco
         }
 
         const carta2: Carta = {
+            id: 'id2',
             naipe: Naipe.Ouros,
             numero: NumeroCarta.Rei
         }
