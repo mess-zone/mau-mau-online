@@ -16,6 +16,7 @@ type Move = {
     jogadorIndex: number,
     moveType: MoveType,
     cardIndex?: number
+    qtd?: number
 }
 
 export class Partida {
@@ -46,25 +47,36 @@ export class Partida {
     }
 
     /**
-     * Retira uma carta do baralho virado para baixo e coloca na mão de um jogador
+     * 
      */
-    // TODO permitir pescar mais de uma carta por vez
-    private pescarCarta(jogadorIndex: number): Carta {
+    /**
+     * Retira cartas do baralho virado para baixo e coloca na mão de um jogador
+     * @param jogadorIndex 
+     * @param qtd number Quantidade de cartas
+     * @returns 
+     */
+    private pescarCartas(jogadorIndex: number, qtd: number = 1): Carta[] {
         if(jogadorIndex !== this._currentJogador) { throw new Error('Não é a vez do jogador!') }
 
-        const carta = this.baralho.tirarCarta()
-        if(!carta) { throw new Error('Não há mais cartas disponíveis no baralho!') }
+        if (this.baralho.size() < qtd) { throw new Error('Não há cartas suficientes disponíveis no baralho!') }
+        
+        const cartas: Carta[] = []
+        for(let i = 0; i < qtd; i++) {
+            const carta = this.baralho.tirarCarta()
+    
+            this.jogadores[jogadorIndex].botarCarta(carta)
 
-        this.jogadores[jogadorIndex].botarCarta(carta)
+            cartas.push(carta)
+        }
 
-        return carta
+        return cartas
     }
 
     /**
      * Retira uma carta da mão do jogador e colocar na pilha de descarte virada para cima
      */
     // TODO permitir descartar mais de uma carta por vez
-    private descartarCarta(jogadorIndex: number, cartaIndex: number): Carta {
+    private descartarCarta(jogadorIndex: number, cartaIndex: number): Carta[] {
         if(jogadorIndex !== this._currentJogador) { throw new Error('Não é a vez do jogador!') }
 
         try {
@@ -74,7 +86,7 @@ export class Partida {
                 this.pilhaDeDescarte.botarCarta(carta)
     
                 this.nextPlayer()
-                return carta
+                return [carta]
             } 
 
             throw new Error('Movimento não permitido!')
@@ -114,13 +126,13 @@ export class Partida {
     }
 
     // TODO antes de cada movimento deve haver uma validação, as validações devem seguir o principio Open Closed, e englobar as cartas especiais
-    public move({ jogadorIndex, moveType, cardIndex }: Move) {
+    public move({ jogadorIndex, moveType, cardIndex, qtd }: Move) {
         if(this._status !== StatusPartida.EM_ANDAMENTO) { throw new Error('A partida não está em andamento') }
 
         if (moveType === 'DESCARTAR') {
             return this.descartarCarta(jogadorIndex, cardIndex)
         } else if(moveType === 'PESCAR') {
-            return this.pescarCarta(jogadorIndex)
+            return this.pescarCartas(jogadorIndex, qtd)
         } 
     }
 

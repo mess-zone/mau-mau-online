@@ -124,7 +124,7 @@ describe("Partida entity", () => {
             const { id, numero, naipe } = partida.jogadores[jogadorIndex].get(cartaIndex)
             expect(partida.pilhaDeDescarte.size()).toBe(0)
 
-            const cartaDescartada: Carta = partida.move({ jogadorIndex, moveType: 'DESCARTAR', cardIndex: cartaIndex })
+            const [ cartaDescartada ] = partida.move({ jogadorIndex, moveType: 'DESCARTAR', cardIndex: cartaIndex })
 
             expect(cartaDescartada).toEqual({ id, naipe, numero })
             expect(partida.jogadores[jogadorIndex].contains(cartaDescartada)).toBeFalsy()
@@ -167,14 +167,29 @@ describe("Partida entity", () => {
             const jogadorIndex = 0
             expect(partida.jogadores[jogadorIndex].size()).toBe(7)
             
-            const carta = partida.move({ jogadorIndex, moveType: "PESCAR" })
+            const [carta] = partida.move({ jogadorIndex, moveType: "PESCAR" })
             expect(partida.jogadores[jogadorIndex].size()).toBe(8)
             expect(partida.jogadores[jogadorIndex].get(7)).toEqual(carta)
             expect(partida.baralho.size()).toBe(30)
         })
 
+        test('um jogador pode pescar mais de uma carta do baralho, se for a sua vez', () => {
+            partida.start()
+            expect(partida.baralho.size()).toBe(31)
+    
+            const jogadorIndex = 0
+            expect(partida.jogadores[jogadorIndex].size()).toBe(7)
+            
+            const cartas = partida.move({ jogadorIndex, moveType: "PESCAR", qtd: 3 })
+            expect(partida.jogadores[jogadorIndex].size()).toBe(10)
+            expect(partida.jogadores[jogadorIndex].get(7)).toEqual(cartas[0])
+            expect(partida.jogadores[jogadorIndex].get(8)).toEqual(cartas[1])
+            expect(partida.jogadores[jogadorIndex].get(9)).toEqual(cartas[2])
+            expect(partida.baralho.size()).toBe(28)
+        })
+
         // TODO E se o jogadorIndex não existir?
-        test('um jogador não pode pescar uma carta do baralho, se não for a sua vez', () => {
+        test('um jogador não pode pescar cartas do baralho, se não for a sua vez', () => {
             partida.start()
 
             const jogadorIndex = 1
@@ -184,14 +199,16 @@ describe("Partida entity", () => {
             expect(partida.jogadores[jogadorIndex].size()).toBe(7)
         })
 
-        test('um jogador não pode pescar uma carta do baralho, se não houver mais cartas no baralho', () => {
+        test('um jogador não pode pescar cartas do baralho, se não houver cartas suficientes no baralho', () => {
             mockedFakeStack.prototype.pop.mockImplementation(() => {
                 return ({
                     naipe: Naipe.Copas,
                     numero: NumeroCarta.Dez
                 })
             });
-    
+
+            mockedFakeStack.prototype.size.mockReturnValueOnce(0);
+
             const fakeStackBaralho = new FakeStack<Carta>()
             const baralho = new Baralho(fakeStackBaralho)
     
@@ -199,12 +216,8 @@ describe("Partida entity", () => {
     
             partida.start()
     
-            mockedFakeStack.prototype.pop.mockImplementation(() => {
-                return undefined
-            });
-    
             const jogadorIndex = 0
-            expect(() => { partida.move({jogadorIndex, moveType: "PESCAR" }) }).toThrow('Não há mais cartas disponíveis no baralho!')
+            expect(() => { partida.move({jogadorIndex, moveType: "PESCAR", qtd: 2 }) }).toThrow('Não há cartas suficientes disponíveis no baralho!')
         })
 
         test('um jogador pode pescar quantas cartas quiser, mas quando ele descarta uma carta, a vez de jogar passa para o próximo jogador', () => {
