@@ -1,161 +1,129 @@
-import { ArrayList } from "@/entities/array-list";
 import { Baralho } from "@/entities/baralho";
-import { Carta } from "@/entities/carta";
 import { Jogador } from "@/entities/jogador";
+import { Naipe } from "@/entities/naipe";
+import { NumeroCarta } from "@/entities/numero-carta";
 import { Partida } from "@/entities/partida"
 import { PilhaDeDescarte } from "@/entities/pilha-de-descarte";
-import { Stack } from "@/entities/stack";
 import { StatusPartida } from "@/entities/status-partida";
-import { FakeStack } from "@test/doubles/fake-stack";
 
-// TODO mock all entities, except Partida...
-jest.mock('../doubles/fake-stack');
-
-let mockedFakeStack = jest.mocked(FakeStack);
+jest.mock('../../src/entities/baralho');
+jest.mock('../../src/entities/pilha-de-descarte');
+jest.mock('../../src/entities/jogador');
+let mockedBaralho = jest.mocked(Baralho);
+let mockedPilhaDeDescarte = jest.mocked(PilhaDeDescarte);
+let mockedJogador = jest.mocked(Jogador);
 
 describe("Partida entity", () => {
-    let partida: Partida
-
-    let stackBaralho: Stack<Carta>
     let baralho: Baralho
-
-    let stackDescarte: Stack<Carta>
     let pilhaDeDescarte: PilhaDeDescarte
-
-    let cartasJogador1: ArrayList<Carta>
     let jogador1: Jogador
-
-    let cartasJogador2: ArrayList<Carta>
     let jogador2: Jogador
-
-    let cartasJogador3: ArrayList<Carta>
     let jogador3: Jogador
 
+    let sut: Partida
+
     beforeEach(() => {
-        mockedFakeStack.mockClear()
-        stackBaralho = new Stack<Carta>()
-        baralho = new Baralho(stackBaralho)
+        jest.clearAllMocks()
 
-        stackDescarte = new Stack<Carta>()
-        pilhaDeDescarte = new PilhaDeDescarte(stackDescarte)
+        baralho = new Baralho(null)
+        pilhaDeDescarte = new PilhaDeDescarte(null)
+        jogador1 = new Jogador(null)
+        jogador2 = new Jogador(null)
+        jogador3 = new Jogador(null)
 
-        cartasJogador1 = new ArrayList<Carta>()
-        jogador1 = new Jogador(cartasJogador1)
-
-        cartasJogador2 = new ArrayList<Carta>()
-        jogador2 = new Jogador(cartasJogador2)
-
-        cartasJogador3 = new ArrayList<Carta>()
-        jogador3 = new Jogador(cartasJogador3)
-
-        partida = new Partida({ baralho, pilhaDeDescarte, jogadores: [ jogador1, jogador2, jogador3 ] })
+        sut = new Partida({ baralho, pilhaDeDescarte, jogadores: [ jogador1, jogador2, jogador3 ] })
     });
 
     test('não deve iniciar partida se não estiver pendente', () => {
-        const stackBaralho = new Stack<Carta>()
-        const baralho = new Baralho(stackBaralho)
+        sut.cancel()
 
-        const stackDescarte = new Stack<Carta>()
-        const pilhaDeDescarte = new PilhaDeDescarte(stackDescarte)
-
-        const cartasJogador1 = new ArrayList<Carta>()
-        const jogador1 = new Jogador(cartasJogador1)
-        partida = new Partida({ baralho, pilhaDeDescarte, jogadores: [ jogador1 ] })
-
-        partida.cancel()
-
-        expect(partida.status).toBe(StatusPartida.CANCELADA)
-        const started = partida.start()
+        expect(sut.status).toBe(StatusPartida.CANCELADA)
+        const started = sut.start()
         expect(started).toBeFalsy()
-        expect(partida.status).toBe(StatusPartida.CANCELADA)
+        expect(sut.status).toBe(StatusPartida.CANCELADA)
     })
 
     test('deve iniciar partida se estiver pendente', () => {
-        expect(partida.status).toBe(StatusPartida.PENDENTE)
-        
-        expect(partida.getJogadores()[0].size()).toBe(0)
-        expect(partida.getJogadores()[1].size()).toBe(0)
-        expect(partida.getJogadores()[2].size()).toBe(0)
+        const carta = {
+            id: 'carta',
+            naipe: Naipe.Copas,
+            numero: NumeroCarta.Cinco
+        }
+        mockedBaralho.prototype.tirarCarta.mockReturnValue(carta)
 
-        expect(partida.currentJogador).toBe(-1)
+        expect(sut.status).toBe(StatusPartida.PENDENTE)
+        expect(sut.currentJogador).toBe(-1)
         
-        const started = partida.start()
+        const started = sut.start()
 
         // atualiza o status para EM ANDAMENTO
         expect(started).toBeTruthy()
-        expect(partida.status).toBe(StatusPartida.EM_ANDAMENTO)
-        expect(partida.currentJogador).toBe(0)
+        expect(sut.status).toBe(StatusPartida.EM_ANDAMENTO)
+        expect(sut.currentJogador).toBe(0)
 
         // distribui as cartas do baralho
-        expect(partida.getJogadores()[0].size()).toBe(7)
-        expect(partida.getJogadores()[1].size()).toBe(7)
-        expect(partida.getJogadores()[2].size()).toBe(7)
-        expect(partida.getBaralho().size()).toBe(52 - (7 * 3))
-        expect(partida.getPilhaDeDescarte().size()).toBe(0)
+        expect(mockedBaralho.prototype.tirarCarta).toHaveBeenCalledTimes(7 * 3)
+        expect(mockedJogador.mock.instances[0].botarCarta).toHaveBeenCalledTimes(7)
+        expect(mockedJogador.mock.instances[1].botarCarta).toHaveBeenCalledTimes(7)
+        expect(mockedJogador.mock.instances[2].botarCarta).toHaveBeenCalledTimes(7)
+        // expect(mockedJogador.prototype.botarCarta).toHaveBeenCalledWith(carta)
+        expect(mockedPilhaDeDescarte.prototype.botarCarta).toHaveBeenCalledTimes(0)
     })
 
     test('deve iniciar partida se houver ao menos 2 jogadores', () => {
-        expect(partida.status).toBe(StatusPartida.PENDENTE)
-        
-        expect(partida.getJogadores()[0].size()).toBe(0)
-        expect(partida.getJogadores()[1].size()).toBe(0)
-        expect(partida.getJogadores()[2].size()).toBe(0)
+        const carta = {
+            id: 'carta',
+            naipe: Naipe.Copas,
+            numero: NumeroCarta.Cinco
+        }
+        mockedBaralho.prototype.tirarCarta.mockReturnValue(carta)
 
-        expect(partida.currentJogador).toBe(-1)
+        expect(sut.status).toBe(StatusPartida.PENDENTE)
+        expect(sut.currentJogador).toBe(-1)
         
-        const started = partida.start()
+        const started = sut.start()
 
         // atualiza o status para EM ANDAMENTO
         expect(started).toBeTruthy()
-        expect(partida.status).toBe(StatusPartida.EM_ANDAMENTO)
-        expect(partida.currentJogador).toBe(0)
+        expect(sut.status).toBe(StatusPartida.EM_ANDAMENTO)
+        expect(sut.currentJogador).toBe(0)
 
         // distribui as cartas do baralho
-        expect(partida.getJogadores()[0].size()).toBe(7)
-        expect(partida.getJogadores()[1].size()).toBe(7)
-        expect(partida.getJogadores()[2].size()).toBe(7)
-        expect(partida.getBaralho().size()).toBe(52 - (7 * 3))
-        expect(partida.getPilhaDeDescarte().size()).toBe(0)
+        expect(mockedBaralho.prototype.tirarCarta).toHaveBeenCalledTimes(7 * 3)
+        expect(mockedJogador.mock.instances[0].botarCarta).toHaveBeenCalledTimes(7)
+        expect(mockedJogador.mock.instances[1].botarCarta).toHaveBeenCalledTimes(7)
+        expect(mockedJogador.mock.instances[2].botarCarta).toHaveBeenCalledTimes(7)
+        // expect(mockedJogador.prototype.botarCarta).toHaveBeenCalledWith(carta)
+        expect(mockedPilhaDeDescarte.prototype.botarCarta).toHaveBeenCalledTimes(0)
 
     })
 
     test('não deve iniciar partida se não houver ao menos 2 jogadores', () => {
-        const stackBaralho = new Stack<Carta>()
-        const baralho = new Baralho(stackBaralho)
+        sut = new Partida({ baralho, pilhaDeDescarte, jogadores: [ jogador1 ] })
 
-        const stackDescarte = new Stack<Carta>()
-        const pilhaDeDescarte = new PilhaDeDescarte(stackDescarte)
-
-        const cartasJogador1 = new ArrayList<Carta>()
-        const jogador1 = new Jogador(cartasJogador1)
-        partida = new Partida({ baralho, pilhaDeDescarte, jogadores: [ jogador1 ] })
-
-        expect(partida.status).toBe(StatusPartida.PENDENTE)
-        const started = partida.start()
+        expect(sut.status).toBe(StatusPartida.PENDENTE)
+        const started = sut.start()
         expect(started).toBeFalsy()
-        expect(partida.status).toBe(StatusPartida.PENDENTE)
-
-        expect(partida.getBaralho().size()).toBe(52)
-
+        expect(sut.status).toBe(StatusPartida.PENDENTE)
     })
 
     test('deve cancelar partida', () => {
-        partida.start()
-        expect(partida.status).toBe(StatusPartida.EM_ANDAMENTO)
+        sut.start()
+        expect(sut.status).toBe(StatusPartida.EM_ANDAMENTO)
 
-        partida.cancel()
-        expect(partida.status).toBe(StatusPartida.CANCELADA) 
+        sut.cancel()
+        expect(sut.status).toBe(StatusPartida.CANCELADA) 
     })
 
     test('deve passar a vez para o próximo jogador', () => {
-        partida.start()
-        expect(partida.currentJogador).toBe(0)
-        partida.nextPlayer()
-        expect(partida.currentJogador).toBe(1)
-        partida.nextPlayer()
-        expect(partida.currentJogador).toBe(2)
-        partida.nextPlayer()
-        expect(partida.currentJogador).toBe(0)
+        sut.start()
+        expect(sut.currentJogador).toBe(0)
+        sut.nextPlayer()
+        expect(sut.currentJogador).toBe(1)
+        sut.nextPlayer()
+        expect(sut.currentJogador).toBe(2)
+        sut.nextPlayer()
+        expect(sut.currentJogador).toBe(0)
     })
 
     test.todo('should end partida')

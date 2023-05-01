@@ -9,17 +9,17 @@ let mockedStack = jest.mocked(Stack);
 
 describe("Pilha de Descarte entity", () => {
     let stack: Stack<Carta>;
-    let mesa: PilhaDeDescarte;
+    let sut: PilhaDeDescarte;
 
     beforeEach(() => {
         jest.clearAllMocks()
         stack = new Stack<Carta>();
-        mesa = new PilhaDeDescarte(stack);
+        sut = new PilhaDeDescarte(stack);
     });
 
     test('deve retornar quantas cartas existem na pilha', () => {
         mockedStack.prototype.size.mockReturnValueOnce(52)
-        expect(mesa.size()).toBe(52)
+        expect(sut.size()).toBe(52)
     })
 
     test('deve visualizar a carta no topo da pilha', () => {
@@ -30,7 +30,7 @@ describe("Pilha de Descarte entity", () => {
         }
         mockedStack.prototype.peek.mockReturnValueOnce(cartaTopo)
 
-        expect(mesa.peek()).toBe(cartaTopo)
+        expect(sut.peek()).toBe(cartaTopo)
     })
 
     test("deve botar uma carta qualquer no topo da pilha", () => {
@@ -40,7 +40,7 @@ describe("Pilha de Descarte entity", () => {
             numero: NumeroCarta.As
         }
 
-        mesa.botarCarta(carta)
+        sut.botarCarta(carta)
         expect(mockedStack.prototype.push).toHaveBeenCalledWith(carta)
     })
 

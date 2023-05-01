@@ -48,23 +48,24 @@ export class Partida {
 
     // TODO refactor to become a action?
     private distribuirCartas() {
-        for(let jogadorIndex = 0; jogadorIndex < this._jogadores.length; jogadorIndex++) {
+        for(let jogadorIndex = 0; jogadorIndex < this.getJogadores().length; jogadorIndex++) {
             for(let i = 0; i < this._cartasPorJogador; i++) {
                 const carta = this._baralho.tirarCarta()
                 // TODO E SE NÃO HOUVER CARTAS SUFICIENTES?
-                this._jogadores[jogadorIndex].botarCarta(carta)
+                this.getJogadores()[jogadorIndex].botarCarta(carta)
             }
         }
     }
 
     public start() {
-        if(this._jogadores.length >= 2) {
-            this._status = StatusPartida.EM_ANDAMENTO
-            this.distribuirCartas()
-            this.nextPlayer()
-            return true
-        }
-        return false
+        if(this.status != StatusPartida.PENDENTE) { return false }
+
+        if(this.getJogadores().length < 2) { return false }
+
+        this._status = StatusPartida.EM_ANDAMENTO
+        this.distribuirCartas()
+        this.nextPlayer()
+        return true
     }
 
     public cancel() {
@@ -72,7 +73,7 @@ export class Partida {
     }
 
     public nextPlayer() {
-        this._currentJogador = (this._currentJogador + 1) % this._jogadores.length
+        this._currentJogador = (this._currentJogador + 1) % this.getJogadores().length
     }
 
     // TODO finalizar vencido (um jogador não tem cartas) ou empatado (não tem cartas no baralho)
