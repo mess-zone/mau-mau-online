@@ -62,6 +62,7 @@ export class Partida {
      * @param jogadorIndex 
      * @param qtd number Quantidade de cartas
      * @returns 
+     * @deprecated
      */
     private pescarCartas(jogadorIndex: number, qtd: number = 1): Carta[] {
         if(jogadorIndex !== this._currentJogador) { throw new Error('Não é a vez do jogador!') }
@@ -82,6 +83,7 @@ export class Partida {
 
     /**
      * Retira cartas da mão do jogador e coloca na pilha de descarte virada para cima
+     * @deprecated
      */
     // TODO faz sentido retornar a lista de cartas descartadas?
     private descartarCarta(jogadorIndex: number, cartas: Carta[]): Carta[] {
@@ -141,6 +143,11 @@ export class Partida {
 
     // TODO o descartar deve receber uma lista de ids de cartas para descartar
     // TODO antes de cada movimento deve haver uma validação (de penalidades dos jogador corrente), as validações devem seguir o principio Open Closed, e englobar as cartas especiais
+    /**
+     * @deprecated
+     * @param param0 
+     * @returns 
+     */
     public move({ jogadorIndex, moveType, cartas, qtd }: Move) {
         if(this._status !== StatusPartida.EM_ANDAMENTO) { throw new Error('A partida não está em andamento') }
 
