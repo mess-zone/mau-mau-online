@@ -20,6 +20,9 @@ describe("Iniciar Partida (Action)", () => {
         sut = new IniciarPartidaAction(partida)
     })
 
+    test.todo('não deve iniciar partida se não estiver pendente')
+    test.todo('deve iniciar partida se estiver pendente')
+
     test('não deve iniciar partida se não houver ao menos 2 jogadores', () => {
         mockedPartida.prototype.getJogadores.mockReturnValueOnce([new Jogador(null)])
         expect(() => {  sut.execute({}) }).toThrowError('Para iniciar uma partida é preciso ter pelo menos dois jogadores')
