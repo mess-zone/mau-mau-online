@@ -51,6 +51,49 @@ describe("Partida entity", () => {
         partida = new Partida({ baralho, pilhaDeDescarte, jogadores: [ jogador1, jogador2, jogador3 ] })
     });
 
+    test('não deve iniciar partida se não estiver pendente', () => {
+        const stackBaralho = new Stack<Carta>()
+        const baralho = new Baralho(stackBaralho)
+
+        const stackDescarte = new Stack<Carta>()
+        const pilhaDeDescarte = new PilhaDeDescarte(stackDescarte)
+
+        const cartasJogador1 = new ArrayList<Carta>()
+        const jogador1 = new Jogador(cartasJogador1)
+        partida = new Partida({ baralho, pilhaDeDescarte, jogadores: [ jogador1 ] })
+
+        partida.cancel()
+
+        expect(partida.status).toBe(StatusPartida.CANCELADA)
+        const started = partida.start()
+        expect(started).toBeFalsy()
+        expect(partida.status).toBe(StatusPartida.CANCELADA)
+    })
+
+    test('deve iniciar partida se estiver pendente', () => {
+        expect(partida.status).toBe(StatusPartida.PENDENTE)
+        
+        expect(partida.getJogadores()[0].size()).toBe(0)
+        expect(partida.getJogadores()[1].size()).toBe(0)
+        expect(partida.getJogadores()[2].size()).toBe(0)
+
+        expect(partida.currentJogador).toBe(-1)
+        
+        const started = partida.start()
+
+        // atualiza o status para EM ANDAMENTO
+        expect(started).toBeTruthy()
+        expect(partida.status).toBe(StatusPartida.EM_ANDAMENTO)
+        expect(partida.currentJogador).toBe(0)
+
+        // distribui as cartas do baralho
+        expect(partida.getJogadores()[0].size()).toBe(7)
+        expect(partida.getJogadores()[1].size()).toBe(7)
+        expect(partida.getJogadores()[2].size()).toBe(7)
+        expect(partida.getBaralho().size()).toBe(52 - (7 * 3))
+        expect(partida.getPilhaDeDescarte().size()).toBe(0)
+    })
+
     test('deve iniciar partida se houver ao menos 2 jogadores', () => {
         expect(partida.status).toBe(StatusPartida.PENDENTE)
         
@@ -73,7 +116,6 @@ describe("Partida entity", () => {
         expect(partida.getJogadores()[2].size()).toBe(7)
         expect(partida.getBaralho().size()).toBe(52 - (7 * 3))
         expect(partida.getPilhaDeDescarte().size()).toBe(0)
-
 
     })
 
@@ -102,9 +144,7 @@ describe("Partida entity", () => {
         expect(partida.status).toBe(StatusPartida.EM_ANDAMENTO)
 
         partida.cancel()
-        expect(partida.status).toBe(StatusPartida.CANCELADA)
-        
-        
+        expect(partida.status).toBe(StatusPartida.CANCELADA) 
     })
 
     test('deve passar a vez para o próximo jogador', () => {
