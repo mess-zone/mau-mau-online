@@ -22,10 +22,13 @@ export class PescaPadraoAction implements Action {
 
         if (this.context.getBaralho().size() < qtd ) { throw new Error('Não há cartas suficientes disponíveis no baralho!') }
 
-        const carta = this.context.getBaralho().tirarCarta()
-    
-        this.context.getJogadores()[jogadorIndex].botarCarta(carta)
+        const cartas: Carta[] = []
+        for(let i = 0; i < qtd; i++) {
+            const carta = this.context.getBaralho().tirarCarta()
+            this.context.getJogadores()[jogadorIndex].botarCarta(carta)
+            cartas.push(carta)
+        }
 
-        return [carta]
+        return cartas
     }
 }

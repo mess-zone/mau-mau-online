@@ -87,7 +87,60 @@ describe("Pesca Padrão (Action)", () => {
         expect(result).toEqual([carta])
     })
 
-    test.todo('um jogador pode pescar mais de uma carta do baralho')
+    test('um jogador pode pescar mais de uma carta do baralho', () => {
+        Object.defineProperty(partida, 'status', {
+            get: jest.fn(() => StatusPartida.EM_ANDAMENTO),
+            set: jest.fn()
+        });
 
-    test.todo('após pescar cartas, o jogador não passa a vez')
+        Object.defineProperty(partida, 'currentJogador', {
+            get: jest.fn(() => 0),
+            set: jest.fn()
+        });
+
+        const carta0 = {
+            id: "c0",
+            naipe: Naipe.Espadas,
+            numero: NumeroCarta.As
+        }
+        const carta1 = {
+            id: "c1",
+            naipe: Naipe.Copas,
+            numero: NumeroCarta.Quatro
+        }
+        mockedBaralho.prototype.tirarCarta.mockReturnValueOnce(carta0).mockReturnValueOnce(carta1)
+
+        const result = sut.execute({ jogadorIndex: 0, qtd: 2 })
+
+        expect(mockedBaralho.prototype.tirarCarta).toHaveBeenCalledTimes(2)
+        expect(mockedJogador.prototype.botarCarta).toHaveBeenNthCalledWith(1, carta0)
+        expect(mockedJogador.prototype.botarCarta).toHaveBeenNthCalledWith(2, carta1)
+        expect(result).toEqual([carta0, carta1])
+    })
+
+    test('após pescar cartas, o jogador não passa a vez', () => {
+        Object.defineProperty(partida, 'status', {
+            get: jest.fn(() => StatusPartida.EM_ANDAMENTO),
+            set: jest.fn()
+        });
+
+        Object.defineProperty(partida, 'currentJogador', {
+            get: jest.fn(() => 0),
+            set: jest.fn()
+        });
+
+        const carta = {
+            id: "c0",
+            naipe: Naipe.Espadas,
+            numero: NumeroCarta.As
+        }
+        mockedBaralho.prototype.tirarCarta.mockReturnValueOnce(carta)
+
+        const result = sut.execute({ jogadorIndex: 0 })
+
+        expect(mockedPartida.prototype.nextPlayer).toHaveBeenCalledTimes(0)
+        expect(mockedBaralho.prototype.tirarCarta).toHaveBeenCalledTimes(1)
+        expect(mockedJogador.prototype.botarCarta).toHaveBeenNthCalledWith(1, carta)
+        expect(result).toEqual([carta])
+    })
 })
