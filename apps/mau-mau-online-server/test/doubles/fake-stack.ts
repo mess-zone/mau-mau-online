@@ -1,5 +1,8 @@
 import { Stack } from "@/entities/stack";
 
+/**
+ * @deprecated
+ */
 export class FakeStack<T> extends Stack<T> {
 
     constructor() {

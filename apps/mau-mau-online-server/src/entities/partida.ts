@@ -75,6 +75,7 @@ export class Partida {
         this._currentJogador = (this._currentJogador + 1) % this._jogadores.length
     }
 
-    // TODO finalizar empatado ou vencido
+    // TODO finalizar vencido (um jogador não tem cartas) ou empatado (não tem cartas no baralho)
+    // TODO permitir baralho com mais de um set de cartas
 
 }
