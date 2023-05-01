@@ -11,7 +11,7 @@ export type PartidaOptions = {
 
 export class Partida {
     private readonly _baralho: Baralho
-    public readonly _pilhaDeDescarte: PilhaDeDescarte
+    private readonly _pilhaDeDescarte: PilhaDeDescarte
     private readonly _jogadores: Jogador[]
 
     private _status: StatusPartida
@@ -74,5 +74,7 @@ export class Partida {
     public nextPlayer() {
         this._currentJogador = (this._currentJogador + 1) % this._jogadores.length
     }
+
+    // TODO finalizar empatado ou vencido
 
 }
