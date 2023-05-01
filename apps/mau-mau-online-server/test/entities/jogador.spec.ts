@@ -69,7 +69,7 @@ describe("Jogador entity", () => {
         jogador.botarCarta(carta1)
         jogador.botarCarta(carta2)
 
-        expect(jogador.tirarCarta(carta1)).toBeTruthy()
+        expect(jogador.tirarCarta(carta1)).toEqual(carta1)
         expect(jogador.size()).toEqual(2)
         expect(jogador.contains(carta1)).toBeFalsy()
 

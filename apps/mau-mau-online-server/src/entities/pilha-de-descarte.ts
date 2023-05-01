@@ -14,6 +14,7 @@ export class PilhaDeDescarte {
     /**
      * Retorna true se é permitido colocar as cartas no monte
      * @param cartas 
+     * @deprecated
      */
     public validateMove(cartas: Carta[]) {
         // todas as cartas devem ter o mesmo naipe e número

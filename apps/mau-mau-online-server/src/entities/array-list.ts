@@ -42,13 +42,12 @@ export class ArrayList<T> {
       return this.size() === 0;
     }
   
-    remove(element: T): boolean {
+    remove(element: T): T {
       const index = this.indexOf(element);
       if (index === -1) {
-        return false;
+        return null;
       }
-      this.removeAtIndex(index);
-      return true;
+      return this.removeAtIndex(index);
     }
   
     removeAtIndex(index: number): T {

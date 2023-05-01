@@ -40,10 +40,11 @@ describe('ArrayList', () => {
     arrayList.add('first');
     arrayList.add('second');
     arrayList.add('third');
-    arrayList.remove('second');
+    const result = arrayList.remove('second');
     expect(arrayList.size()).toBe(2);
     expect(arrayList.get(0)).toBe('first');
     expect(arrayList.get(1)).toBe('third');
+    expect(result).toBe('second')
   });
 
   it('should check if an element exists in the list', () => {

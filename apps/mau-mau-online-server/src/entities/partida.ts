@@ -21,7 +21,7 @@ type Move = {
 
 export class Partida {
     private readonly _baralho: Baralho
-    public readonly pilhaDeDescarte: PilhaDeDescarte
+    public readonly _pilhaDeDescarte: PilhaDeDescarte
     private readonly _jogadores: Jogador[]
 
     private _status: StatusPartida
@@ -32,7 +32,7 @@ export class Partida {
 
     constructor({ baralho, pilhaDeDescarte, jogadores }: PartidaOptions) {
         this._baralho = baralho
-        this.pilhaDeDescarte = pilhaDeDescarte
+        this._pilhaDeDescarte = pilhaDeDescarte
         this._jogadores = jogadores
 
         this._status = StatusPartida.PENDENTE
@@ -54,6 +54,9 @@ export class Partida {
         return this._jogadores
     }
 
+    public getPilhaDeDescarte() {
+        return this._pilhaDeDescarte
+    }
     /**
      * 
      */
@@ -92,12 +95,12 @@ export class Partida {
         try {
             // TODO é preciso verificar se as cartas realmente pertencem ao jogador
             // TODO validate move deveria retornar uma exceção com a mensagem
-            if(this.pilhaDeDescarte.validateMove(cartas)) {
+            if(this._pilhaDeDescarte.validateMove(cartas)) {
                 
                 // const cartasDescartadas: Carta[] = []
                 for(let i = 0; i < cartas.length; i++) {
                     this._jogadores[jogadorIndex].tirarCarta(cartas[i])
-                    this.pilhaDeDescarte.botarCarta(cartas[i])
+                    this._pilhaDeDescarte.botarCarta(cartas[i])
                     // cartasDescartadas.push(cartas[i])
                 }
     

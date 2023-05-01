@@ -133,15 +133,15 @@ describe("Partida entity", () => {
             const cartaIndex = 3
             expect(partida.getJogadores()[jogadorIndex].size()).toBe(7)
             const carta = partida.getJogadores()[jogadorIndex].get(cartaIndex)
-            expect(partida.pilhaDeDescarte.size()).toBe(0)
+            expect(partida._pilhaDeDescarte.size()).toBe(0)
 
             const [ cartaDescartada ] = partida.move({ jogadorIndex, moveType: 'DESCARTAR', cartas: [carta] })
 
             expect(cartaDescartada).toEqual(carta)
             expect(partida.getJogadores()[jogadorIndex].contains(cartaDescartada)).toBeFalsy()
             expect(partida.getJogadores()[jogadorIndex].size()).toBe(6)
-            expect(partida.pilhaDeDescarte.size()).toBe(1)
-            expect(partida.pilhaDeDescarte.peek()).toBe(cartaDescartada)
+            expect(partida._pilhaDeDescarte.size()).toBe(1)
+            expect(partida._pilhaDeDescarte.peek()).toBe(cartaDescartada)
         })
     
         test('um jogador pode descartar mais de uma carta se for a sua vez', () => {
@@ -174,7 +174,7 @@ describe("Partida entity", () => {
             expect(partida.getJogadores()[jogadorIndex].size()).toBe(7)
             const cartaA = partida.getJogadores()[jogadorIndex].get(0)
             const cartaB = partida.getJogadores()[jogadorIndex].get(3)
-            expect(partida.pilhaDeDescarte.size()).toBe(0)
+            expect(partida._pilhaDeDescarte.size()).toBe(0)
 
             const cartasDescartadas = partida.move({ jogadorIndex, moveType: 'DESCARTAR', cartas: [cartaA, cartaB] })
 
@@ -182,8 +182,8 @@ describe("Partida entity", () => {
             expect(partida.getJogadores()[jogadorIndex].contains(cartaA)).toBeFalsy()
             expect(partida.getJogadores()[jogadorIndex].contains(cartaB)).toBeFalsy()
             expect(partida.getJogadores()[jogadorIndex].size()).toBe(5)
-            expect(partida.pilhaDeDescarte.size()).toBe(2)
-            expect(partida.pilhaDeDescarte.peek()).toBe(cartaB)
+            expect(partida._pilhaDeDescarte.size()).toBe(2)
+            expect(partida._pilhaDeDescarte.peek()).toBe(cartaB)
         })
 
         test('um jogador não pode descartar cartas, se não for a sua vez', () => {
@@ -192,13 +192,13 @@ describe("Partida entity", () => {
             const jogadorIndex = 1
             const cartaIndex = 3
             expect(partida.getJogadores()[jogadorIndex].size()).toBe(7)
-            expect(partida.pilhaDeDescarte.size()).toBe(0)
+            expect(partida._pilhaDeDescarte.size()).toBe(0)
             const carta = partida.getJogadores()[jogadorIndex].get(cartaIndex)
 
     
             expect(() => { partida.move({ jogadorIndex, moveType: 'DESCARTAR', cartas: [carta] }) }).toThrow('Não é a vez do jogador!')
             expect(partida.getJogadores()[jogadorIndex].size()).toBe(7)
-            expect(partida.pilhaDeDescarte.size()).toBe(0)
+            expect(partida._pilhaDeDescarte.size()).toBe(0)
         })
 
         test.skip('um jogador não pode descartar cartas que não possui', () => {
@@ -206,7 +206,7 @@ describe("Partida entity", () => {
     
             const jogadorIndex = 0
             expect(partida.getJogadores()[jogadorIndex].size()).toBe(7)
-            expect(partida.pilhaDeDescarte.size()).toBe(0)
+            expect(partida._pilhaDeDescarte.size()).toBe(0)
 
             const invalidCarta = {
                 id: 'invalid',
@@ -216,7 +216,7 @@ describe("Partida entity", () => {
     
             expect(() => { partida.move({ jogadorIndex, moveType: 'DESCARTAR', cartas: [invalidCarta] }) }).toThrow('Index out of bounds')
             expect(partida.getJogadores()[jogadorIndex].size()).toBe(7)
-            expect(partida.pilhaDeDescarte.size()).toBe(0)
+            expect(partida._pilhaDeDescarte.size()).toBe(0)
         })
 
         
