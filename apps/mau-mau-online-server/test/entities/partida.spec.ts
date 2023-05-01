@@ -55,9 +55,9 @@ describe("Partida entity", () => {
     test('deve iniciar partida se houver ao menos 2 jogadores', () => {
         expect(partida.status).toBe(StatusPartida.PENDENTE)
         
-        expect(partida.jogadores[0].size()).toBe(0)
-        expect(partida.jogadores[1].size()).toBe(0)
-        expect(partida.jogadores[2].size()).toBe(0)
+        expect(partida.getJogadores()[0].size()).toBe(0)
+        expect(partida.getJogadores()[1].size()).toBe(0)
+        expect(partida.getJogadores()[2].size()).toBe(0)
 
         expect(partida.currentJogador).toBe(-1)
         
@@ -69,10 +69,10 @@ describe("Partida entity", () => {
         expect(partida.currentJogador).toBe(0)
 
         // distribui as cartas do baralho
-        expect(partida.jogadores[0].size()).toBe(7)
-        expect(partida.jogadores[1].size()).toBe(7)
-        expect(partida.jogadores[2].size()).toBe(7)
-        expect(partida.baralho.size()).toBe(52 - (7 * 3))
+        expect(partida.getJogadores()[0].size()).toBe(7)
+        expect(partida.getJogadores()[1].size()).toBe(7)
+        expect(partida.getJogadores()[2].size()).toBe(7)
+        expect(partida.getBaralho().size()).toBe(52 - (7 * 3))
 
 
     })
@@ -93,7 +93,7 @@ describe("Partida entity", () => {
         expect(started).toBeFalsy()
         expect(partida.status).toBe(StatusPartida.PENDENTE)
 
-        expect(partida.baralho.size()).toBe(52)
+        expect(partida.getBaralho().size()).toBe(52)
 
     })
 
@@ -120,15 +120,15 @@ describe("Partida entity", () => {
 
             const jogadorIndex = 0
             const cartaIndex = 3
-            expect(partida.jogadores[jogadorIndex].size()).toBe(7)
-            const carta = partida.jogadores[jogadorIndex].get(cartaIndex)
+            expect(partida.getJogadores()[jogadorIndex].size()).toBe(7)
+            const carta = partida.getJogadores()[jogadorIndex].get(cartaIndex)
             expect(partida.pilhaDeDescarte.size()).toBe(0)
 
             const [ cartaDescartada ] = partida.move({ jogadorIndex, moveType: 'DESCARTAR', cartas: [carta] })
 
             expect(cartaDescartada).toEqual(carta)
-            expect(partida.jogadores[jogadorIndex].contains(cartaDescartada)).toBeFalsy()
-            expect(partida.jogadores[jogadorIndex].size()).toBe(6)
+            expect(partida.getJogadores()[jogadorIndex].contains(cartaDescartada)).toBeFalsy()
+            expect(partida.getJogadores()[jogadorIndex].size()).toBe(6)
             expect(partida.pilhaDeDescarte.size()).toBe(1)
             expect(partida.pilhaDeDescarte.peek()).toBe(cartaDescartada)
         })
@@ -160,17 +160,17 @@ describe("Partida entity", () => {
             partida.start()
 
             const jogadorIndex = 0
-            expect(partida.jogadores[jogadorIndex].size()).toBe(7)
-            const cartaA = partida.jogadores[jogadorIndex].get(0)
-            const cartaB = partida.jogadores[jogadorIndex].get(3)
+            expect(partida.getJogadores()[jogadorIndex].size()).toBe(7)
+            const cartaA = partida.getJogadores()[jogadorIndex].get(0)
+            const cartaB = partida.getJogadores()[jogadorIndex].get(3)
             expect(partida.pilhaDeDescarte.size()).toBe(0)
 
             const cartasDescartadas = partida.move({ jogadorIndex, moveType: 'DESCARTAR', cartas: [cartaA, cartaB] })
 
             expect(cartasDescartadas).toEqual([cartaA, cartaB])
-            expect(partida.jogadores[jogadorIndex].contains(cartaA)).toBeFalsy()
-            expect(partida.jogadores[jogadorIndex].contains(cartaB)).toBeFalsy()
-            expect(partida.jogadores[jogadorIndex].size()).toBe(5)
+            expect(partida.getJogadores()[jogadorIndex].contains(cartaA)).toBeFalsy()
+            expect(partida.getJogadores()[jogadorIndex].contains(cartaB)).toBeFalsy()
+            expect(partida.getJogadores()[jogadorIndex].size()).toBe(5)
             expect(partida.pilhaDeDescarte.size()).toBe(2)
             expect(partida.pilhaDeDescarte.peek()).toBe(cartaB)
         })
@@ -180,13 +180,13 @@ describe("Partida entity", () => {
     
             const jogadorIndex = 1
             const cartaIndex = 3
-            expect(partida.jogadores[jogadorIndex].size()).toBe(7)
+            expect(partida.getJogadores()[jogadorIndex].size()).toBe(7)
             expect(partida.pilhaDeDescarte.size()).toBe(0)
-            const carta = partida.jogadores[jogadorIndex].get(cartaIndex)
+            const carta = partida.getJogadores()[jogadorIndex].get(cartaIndex)
 
     
             expect(() => { partida.move({ jogadorIndex, moveType: 'DESCARTAR', cartas: [carta] }) }).toThrow('Não é a vez do jogador!')
-            expect(partida.jogadores[jogadorIndex].size()).toBe(7)
+            expect(partida.getJogadores()[jogadorIndex].size()).toBe(7)
             expect(partida.pilhaDeDescarte.size()).toBe(0)
         })
 
@@ -194,7 +194,7 @@ describe("Partida entity", () => {
             partida.start()
     
             const jogadorIndex = 0
-            expect(partida.jogadores[jogadorIndex].size()).toBe(7)
+            expect(partida.getJogadores()[jogadorIndex].size()).toBe(7)
             expect(partida.pilhaDeDescarte.size()).toBe(0)
 
             const invalidCarta = {
@@ -204,37 +204,37 @@ describe("Partida entity", () => {
             }
     
             expect(() => { partida.move({ jogadorIndex, moveType: 'DESCARTAR', cartas: [invalidCarta] }) }).toThrow('Index out of bounds')
-            expect(partida.jogadores[jogadorIndex].size()).toBe(7)
+            expect(partida.getJogadores()[jogadorIndex].size()).toBe(7)
             expect(partida.pilhaDeDescarte.size()).toBe(0)
         })
 
         
         test('um jogador pode pescar uma carta do baralho, se for a sua vez', () => {
             partida.start()
-            expect(partida.baralho.size()).toBe(31)
+            expect(partida.getBaralho().size()).toBe(31)
     
             const jogadorIndex = 0
-            expect(partida.jogadores[jogadorIndex].size()).toBe(7)
+            expect(partida.getJogadores()[jogadorIndex].size()).toBe(7)
             
             const [carta] = partida.move({ jogadorIndex, moveType: "PESCAR" })
-            expect(partida.jogadores[jogadorIndex].size()).toBe(8)
-            expect(partida.jogadores[jogadorIndex].get(7)).toEqual(carta)
-            expect(partida.baralho.size()).toBe(30)
+            expect(partida.getJogadores()[jogadorIndex].size()).toBe(8)
+            expect(partida.getJogadores()[jogadorIndex].get(7)).toEqual(carta)
+            expect(partida.getBaralho().size()).toBe(30)
         })
 
         test('um jogador pode pescar mais de uma carta do baralho, se for a sua vez', () => {
             partida.start()
-            expect(partida.baralho.size()).toBe(31)
+            expect(partida.getBaralho().size()).toBe(31)
     
             const jogadorIndex = 0
-            expect(partida.jogadores[jogadorIndex].size()).toBe(7)
+            expect(partida.getJogadores()[jogadorIndex].size()).toBe(7)
             
             const cartas = partida.move({ jogadorIndex, moveType: "PESCAR", qtd: 3 })
-            expect(partida.jogadores[jogadorIndex].size()).toBe(10)
-            expect(partida.jogadores[jogadorIndex].get(7)).toEqual(cartas[0])
-            expect(partida.jogadores[jogadorIndex].get(8)).toEqual(cartas[1])
-            expect(partida.jogadores[jogadorIndex].get(9)).toEqual(cartas[2])
-            expect(partida.baralho.size()).toBe(28)
+            expect(partida.getJogadores()[jogadorIndex].size()).toBe(10)
+            expect(partida.getJogadores()[jogadorIndex].get(7)).toEqual(cartas[0])
+            expect(partida.getJogadores()[jogadorIndex].get(8)).toEqual(cartas[1])
+            expect(partida.getJogadores()[jogadorIndex].get(9)).toEqual(cartas[2])
+            expect(partida.getBaralho().size()).toBe(28)
         })
 
         // TODO E se o jogadorIndex não existir?
@@ -242,10 +242,10 @@ describe("Partida entity", () => {
             partida.start()
 
             const jogadorIndex = 1
-            expect(partida.jogadores[jogadorIndex].size()).toBe(7)
+            expect(partida.getJogadores()[jogadorIndex].size()).toBe(7)
             
             expect(() => { partida.move({jogadorIndex, moveType: "PESCAR" }) }).toThrow('Não é a vez do jogador!')
-            expect(partida.jogadores[jogadorIndex].size()).toBe(7)
+            expect(partida.getJogadores()[jogadorIndex].size()).toBe(7)
         })
 
         test('um jogador não pode pescar cartas do baralho, se não houver cartas suficientes no baralho', () => {
@@ -292,16 +292,16 @@ describe("Partida entity", () => {
             expect(() => { partida.move({ jogadorIndex: 1, moveType: "PESCAR" }) }).toThrow("Não é a vez do jogador!")
             
             // TODO é muito estranho ter que passar o index do jogador e a carta, porque ainda falta verificar se a carta pertence ao jogador, seria melhor passar o id da carta
-            partida.move({ jogadorIndex: 0, moveType: "DESCARTAR", cartas: [partida.jogadores[0].get(1)] })
+            partida.move({ jogadorIndex: 0, moveType: "DESCARTAR", cartas: [partida.getJogadores()[0].get(1)] })
             expect(partida.currentJogador).toBe(1)
-            expect(() => { partida.move({ jogadorIndex: 0, moveType: "DESCARTAR", cartas: [partida.jogadores[0].get(1)] }) }).toThrow("Não é a vez do jogador!")
+            expect(() => { partida.move({ jogadorIndex: 0, moveType: "DESCARTAR", cartas: [partida.getJogadores()[0].get(1)] }) }).toThrow("Não é a vez do jogador!")
             
             partida.move({ jogadorIndex: 1, moveType: "PESCAR" })
             expect(partida.currentJogador).toBe(1)
-            partida.move({ jogadorIndex: 1, moveType: "DESCARTAR", cartas: [partida.jogadores[1].get(1)] })
+            partida.move({ jogadorIndex: 1, moveType: "DESCARTAR", cartas: [partida.getJogadores()[1].get(1)] })
             expect(partida.currentJogador).toBe(2)
 
-            partida.move({ jogadorIndex: 2, moveType: "DESCARTAR", cartas: [partida.jogadores[2].get(1)] })
+            partida.move({ jogadorIndex: 2, moveType: "DESCARTAR", cartas: [partida.getJogadores()[2].get(1)] })
             expect(partida.currentJogador).toBe(0)
 
         })

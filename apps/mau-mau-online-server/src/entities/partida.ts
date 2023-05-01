@@ -4,7 +4,7 @@ import { Jogador } from "@/entities/jogador";
 import { StatusPartida } from "@/entities/status-partida";
 import { Carta } from "@/entities/carta";
 
-type PartidaOptions = { 
+export type PartidaOptions = { 
     baralho: Baralho,
     pilhaDeDescarte: PilhaDeDescarte,
     jogadores: Jogador[],
@@ -20,9 +20,9 @@ type Move = {
 }
 
 export class Partida {
-    public readonly baralho: Baralho
+    private readonly _baralho: Baralho
     public readonly pilhaDeDescarte: PilhaDeDescarte
-    public readonly jogadores: Jogador[]
+    private readonly _jogadores: Jogador[]
 
     private _status: StatusPartida
     private _currentJogador: number = -1
@@ -31,9 +31,9 @@ export class Partida {
 
 
     constructor({ baralho, pilhaDeDescarte, jogadores }: PartidaOptions) {
-        this.baralho = baralho
+        this._baralho = baralho
         this.pilhaDeDescarte = pilhaDeDescarte
-        this.jogadores = jogadores
+        this._jogadores = jogadores
 
         this._status = StatusPartida.PENDENTE
     }
@@ -44,6 +44,14 @@ export class Partida {
 
     public get currentJogador() {
         return this._currentJogador
+    }
+
+    public getBaralho() {
+        return this._baralho
+    }
+
+    public getJogadores() {
+        return this._jogadores
     }
 
     /**
@@ -58,13 +66,13 @@ export class Partida {
     private pescarCartas(jogadorIndex: number, qtd: number = 1): Carta[] {
         if(jogadorIndex !== this._currentJogador) { throw new Error('Não é a vez do jogador!') }
 
-        if (this.baralho.size() < qtd) { throw new Error('Não há cartas suficientes disponíveis no baralho!') }
+        if (this._baralho.size() < qtd) { throw new Error('Não há cartas suficientes disponíveis no baralho!') }
         
         const cartas: Carta[] = []
         for(let i = 0; i < qtd; i++) {
-            const carta = this.baralho.tirarCarta()
+            const carta = this._baralho.tirarCarta()
     
-            this.jogadores[jogadorIndex].botarCarta(carta)
+            this._jogadores[jogadorIndex].botarCarta(carta)
 
             cartas.push(carta)
         }
@@ -86,7 +94,7 @@ export class Partida {
                 
                 // const cartasDescartadas: Carta[] = []
                 for(let i = 0; i < cartas.length; i++) {
-                    this.jogadores[jogadorIndex].tirarCarta(cartas[i])
+                    this._jogadores[jogadorIndex].tirarCarta(cartas[i])
                     this.pilhaDeDescarte.botarCarta(cartas[i])
                     // cartasDescartadas.push(cartas[i])
                 }
@@ -103,18 +111,18 @@ export class Partida {
     }
 
     private distribuirCartas() {
-        for(let jogadorIndex = 0; jogadorIndex < this.jogadores.length; jogadorIndex++) {
+        for(let jogadorIndex = 0; jogadorIndex < this._jogadores.length; jogadorIndex++) {
             for(let i = 0; i < this._cartasPorJogador; i++) {
-                const carta = this.baralho.tirarCarta()
+                const carta = this._baralho.tirarCarta()
                 // TODO E SE NÃO HOUVER CARTAS SUFICIENTES?
-                this.jogadores[jogadorIndex].botarCarta(carta)
+                this._jogadores[jogadorIndex].botarCarta(carta)
             }
         }
     }
 
 
     public start() {
-        if(this.jogadores.length >= 2) {
+        if(this._jogadores.length >= 2) {
             this._status = StatusPartida.EM_ANDAMENTO
             this.distribuirCartas()
             this.nextPlayer()
@@ -128,7 +136,7 @@ export class Partida {
     }
 
     private nextPlayer() {
-        this._currentJogador = (this._currentJogador + 1) % this.jogadores.length
+        this._currentJogador = (this._currentJogador + 1) % this._jogadores.length
     }
 
     // TODO o descartar deve receber uma lista de ids de cartas para descartar
