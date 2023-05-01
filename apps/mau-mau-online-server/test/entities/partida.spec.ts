@@ -126,6 +126,30 @@ describe("Partida entity", () => {
         expect(sut.currentJogador).toBe(0)
     })
 
-    test.todo('should end partida')
+    test('deve finalizar a partida quando um jogador não tiver mais cartas', () => {
+        sut.start()
+        expect(sut.currentJogador).toBe(0)
+        expect(sut.status).toBe(StatusPartida.EM_ANDAMENTO)
+
+        mockedJogador.prototype.size.mockReturnValue(0)
+        sut.checkEnd()
+
+        expect(sut.status).toBe(StatusPartida.FINALIZADA)
+
+    })
+
+    test('deve finalizar a partida quando o baralho não tiver mais cartas', () => {
+        sut.start()
+        expect(sut.currentJogador).toBe(0)
+        expect(sut.status).toBe(StatusPartida.EM_ANDAMENTO)
+
+        mockedJogador.prototype.size.mockReturnValue(10)
+        mockedBaralho.prototype.size.mockReturnValue(0)
+        sut.checkEnd()
+
+        expect(sut.status).toBe(StatusPartida.FINALIZADA)
+    })
+
+    test.todo('indicar o ganhador da partida')
 
 })

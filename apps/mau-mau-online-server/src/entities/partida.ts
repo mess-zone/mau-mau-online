@@ -76,6 +76,16 @@ export class Partida {
         this._currentJogador = (this._currentJogador + 1) % this.getJogadores().length
     }
 
+    public checkEnd() {
+        if(this.getJogadores()[this._currentJogador].size() == 0) {
+            this._status = StatusPartida.FINALIZADA
+        }
+        
+        if(this.getBaralho().size() == 0) {
+            this._status = StatusPartida.FINALIZADA
+        }
+    }
+
     // TODO finalizar vencido (um jogador não tem cartas) ou empatado (não tem cartas no baralho)
     // TODO permitir baralho com mais de um set de cartas
 
