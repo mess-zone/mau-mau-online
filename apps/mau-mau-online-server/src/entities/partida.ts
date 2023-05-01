@@ -135,7 +135,7 @@ export class Partida {
         this._status = StatusPartida.CANCELADA
     }
 
-    private nextPlayer() {
+    public nextPlayer() {
         this._currentJogador = (this._currentJogador + 1) % this._jogadores.length
     }
 

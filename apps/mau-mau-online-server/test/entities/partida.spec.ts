@@ -106,6 +106,17 @@ describe("Partida entity", () => {
         
         
     })
+
+    test('deve passar a vez para o próximo jogador', () => {
+        partida.start()
+        expect(partida.currentJogador).toBe(0)
+        partida.nextPlayer()
+        expect(partida.currentJogador).toBe(1)
+        partida.nextPlayer()
+        expect(partida.currentJogador).toBe(2)
+        partida.nextPlayer()
+        expect(partida.currentJogador).toBe(0)
+    })
     
     describe('move', () => {
         test('um jogador não pode jogar se a partida não estiver em andamento', () => {
