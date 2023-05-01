@@ -27,6 +27,8 @@ export class Jogador {
     //     return this.list.removeAtIndex(index)
     // }
 
+    // TODO o metodo não é util, 
+    // porque o jogador pode conter cartas com o mesmo naipe e número, mas será retornado false se os ids forem diferentes
     public contains(carta: Carta) {
         return this.list.contains(carta)
     }
