@@ -8,6 +8,9 @@ export type PescarPadraoConfig = {
     qtd?: number,
 }
 
+/**
+ * Retira cartas do baralho virado para baixo e coloca na mão de um jogador
+ */
 export class PescarPadraoAction implements Action {
     private readonly context: Partida
 

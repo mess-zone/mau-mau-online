@@ -8,6 +8,9 @@ export type DescartarPadraoConfig = {
     cartas: Carta[],
 }
 
+/**
+ * Retira cartas da mão do jogador e coloca na pilha de descarte virada para cima
+ */
 export class DescartarPadraoAction implements Action {
     private readonly context: Partida
 
@@ -15,6 +18,10 @@ export class DescartarPadraoAction implements Action {
         this.context = context
     }
 
+    // TODO faz sentido retornar a lista de cartas descartadas?
+    // TODO é preciso verificar se as cartas realmente pertencem ao jogador?
+    // TODO o descartar deve receber uma lista de ids de cartas para descartar?
+    // TODO devem haver variações dos movimentos (de penalidades dos jogador corrente), seguir o principio Open Closed, e englobar as cartas especiais
     public execute({ jogadorIndex, cartas }: DescartarPadraoConfig): Carta[] {
         if(this.context.status !== StatusPartida.EM_ANDAMENTO) { throw new Error('A partida não está em andamento') }
 

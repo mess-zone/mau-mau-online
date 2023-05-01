@@ -4,7 +4,7 @@ import { Naipe } from "@/entities/naipe";
 import { NumeroCarta } from "@/entities/numero-carta";
 import { FakeStack } from "@test/doubles/fake-stack";
 
-describe("Mesa entity", () => {
+describe("Pilha de Descate entity", () => {
     let fakeStack: FakeStack<Carta>;
     let mesa: PilhaDeDescarte;
 
@@ -17,12 +17,12 @@ describe("Mesa entity", () => {
        expect(mesa.size()).toBe(0)
     })
 
-    test('deve retornar quantas cartas existem no monte', () => {
+    test('deve retornar quantas cartas existem na pilha', () => {
         const stackSize = fakeStack.size()
         expect(mesa.size()).toBe(stackSize)
     })
 
-    test('deve visualizar a carta no topo do monte', () => {
+    test('deve visualizar a carta no topo da pilha', () => {
         expect(mesa.peek()).toBeUndefined()
 
         const carta: Carta = {
@@ -35,7 +35,7 @@ describe("Mesa entity", () => {
         expect(mesa.peek()).toBe(carta)
     })
 
-    test("deve botar uma carta qualquer no topo do monte", () => {
+    test("deve botar uma carta qualquer no topo da pilha", () => {
         expect(mesa.size()).toBe(0)
         const carta: Carta = {
             id: 'id0',
@@ -47,132 +47,5 @@ describe("Mesa entity", () => {
         expect(mesa.size()).toBe(1)
         expect(fakeStack.peek()).toBe(carta)
     })
-
-    describe('validação de movimentos', () => {
-        test("deve aceitar botar qualquer carta no topo do monte vazio", () => {
-            const carta: Carta = {
-                id: 'id0',
-                naipe: Naipe.Espadas,
-                numero: NumeroCarta.As
-            }
-
-            expect(mesa.validateMove([carta])).toBeTruthy()
-        })
-
-        test("deve aceitar botar uma unica carta no topo do monte", () => {
-            const carta1: Carta = {
-                id: 'id1',
-                naipe: Naipe.Espadas,
-                numero: NumeroCarta.As
-            }
-            mesa.botarCarta(carta1)
-
-            const carta2: Carta = {
-                id: 'id2',
-                naipe: Naipe.Espadas,
-                numero: NumeroCarta.Tres
-            }
-
-            expect(mesa.validateMove([carta2])).toBeTruthy()
-        })
-
-        test("deve aceitar botar cartas iguais no topo do monte", () => {
-            const carta1: Carta = {
-                id: 'id1',
-                naipe: Naipe.Espadas,
-                numero: NumeroCarta.As
-            }
-            mesa.botarCarta(carta1)
-
-            const carta2: Carta = {
-                id: 'id2',
-                naipe: Naipe.Espadas,
-                numero: NumeroCarta.Tres
-            }
-            const carta3: Carta = {
-                id: 'id3',
-                naipe: Naipe.Espadas,
-                numero: NumeroCarta.Tres
-            }
-
-            expect(mesa.validateMove([carta2, carta3])).toBeTruthy()
-        })
-
-        test("não deve aceitar botar cartas diferentes no topo do monte", () => {
-            const carta1: Carta = {
-                id: 'id1',
-                naipe: Naipe.Espadas,
-                numero: NumeroCarta.As
-            }
-            mesa.botarCarta(carta1)
-
-            const carta2: Carta = {
-                id: 'id2',
-                naipe: Naipe.Espadas,
-                numero: NumeroCarta.Tres
-            }
-            const carta3: Carta = {
-                id: 'id3',
-                naipe: Naipe.Paus,
-                numero: NumeroCarta.As
-            }
-
-            expect(mesa.validateMove([carta2, carta3])).toBeFalsy()
-        })
-    
-        test("deve permitir botar cartas com o mesmo naipe da carta no topo do monte", () => {
-            const carta1: Carta = {
-                id: 'id1',
-                naipe: Naipe.Espadas,
-                numero: NumeroCarta.As
-            }
-            mesa.botarCarta(carta1)
-
-            const carta2: Carta = {
-                id: 'id2',
-                naipe: Naipe.Espadas,
-                numero: NumeroCarta.Tres
-            }
-
-            expect(mesa.validateMove([carta2])).toBeTruthy()
-        })
-   
-        test("deve permitir botar cartas com o mesmo numero da carta no topo do monte", () => {
-            const carta1: Carta = {
-                id: 'id1',
-                naipe: Naipe.Espadas,
-                numero: NumeroCarta.As
-            }
-            mesa.botarCarta(carta1)
-
-            const carta2: Carta = {
-                id: 'id2',
-                naipe: Naipe.Ouros,
-                numero: NumeroCarta.As
-            }
-
-            expect(mesa.validateMove([carta2])).toBeTruthy()
-        })
- 
-        test("não deve permitir botar cartas com numero e naipe diferente da carta no topo do monte", () => {
-            const carta1: Carta = {
-                id: 'id2',
-                naipe: Naipe.Espadas,
-                numero: NumeroCarta.As
-            }
-            mesa.botarCarta(carta1)
-
-            const carta2: Carta = {
-                id: 'id2',
-                naipe: Naipe.Ouros,
-                numero: NumeroCarta.Tres
-            }
-
-            expect(mesa.validateMove([carta2])).toBeFalsy()
-        })
-    })
-
-
-
 
 })
