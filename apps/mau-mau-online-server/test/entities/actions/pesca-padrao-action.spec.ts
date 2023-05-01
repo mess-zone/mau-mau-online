@@ -16,46 +16,48 @@ let mockedJogador = jest.mocked(Jogador);
 mockedPartida.prototype.getBaralho.mockReturnValue(new Baralho(null))
 mockedPartida.prototype.getJogadores.mockReturnValue([ new Jogador(null) ])
 
+let mockedStatus: jest.Mock<StatusPartida>
+let mockedCurrentJogador: jest.Mock<number>
+
+
 describe("Pesca Padrão (Action)", () => {
     let partida: Partida
     let sut: PescaPadraoAction
 
+
     beforeEach(() => {
         jest.clearAllMocks()
 
+        mockedStatus = jest.fn(() => StatusPartida.EM_ANDAMENTO)
+        mockedCurrentJogador = jest.fn(() => 0)
+
         partida = new Partida(null)
         sut = new PescaPadraoAction(partida)
+
+        Object.defineProperty(partida, 'status', {
+            get: mockedStatus,
+            set: jest.fn(),
+        });
+
+        Object.defineProperty(partida, 'currentJogador', {
+            get: mockedCurrentJogador,
+            set: jest.fn(),
+        });
     })
 
     test('um jogador não pode jogar se a partida não estiver em andamento', () => {
-        Object.defineProperty(partida, 'status', {
-            get: jest.fn(() => StatusPartida.CANCELADA),
-            set: jest.fn()
-        });
+        mockedStatus.mockReturnValue(StatusPartida.CANCELADA)
 
         expect(() => {  sut.execute({ jogadorIndex: 0 }) }).toThrowError('A partida não está em andamento')
     })
 
     test('um jogador não pode jogar se não for a sua vez', () => {
-        Object.defineProperty(partida, 'status', {
-            get: jest.fn(() => StatusPartida.EM_ANDAMENTO),
-            set: jest.fn()
-        });
+        mockedCurrentJogador.mockReturnValue(1)
 
-        expect(() => {  sut.execute({ jogadorIndex: 1 }) }).toThrowError('Não é a vez do jogador')
+        expect(() => {  sut.execute({ jogadorIndex: 0 }) }).toThrowError('Não é a vez do jogador')
     })
 
     test('um jogador não pode pescar cartas do baralho, se não houver cartas suficientes no baralho', () => {
-        Object.defineProperty(partida, 'status', {
-            get: jest.fn(() => StatusPartida.EM_ANDAMENTO),
-            set: jest.fn()
-        });
-
-        Object.defineProperty(partida, 'currentJogador', {
-            get: jest.fn(() => 0),
-            set: jest.fn()
-        });
-
         mockedBaralho.prototype.size.mockReturnValueOnce(2)
 
         expect(() => {  sut.execute({ jogadorIndex: 0, qtd: 4 }) }).toThrowError('Não há cartas suficientes disponíveis no baralho!')
@@ -63,16 +65,6 @@ describe("Pesca Padrão (Action)", () => {
     })
 
     test('um jogador pode pescar uma única carta do baralho', () => {
-        Object.defineProperty(partida, 'status', {
-            get: jest.fn(() => StatusPartida.EM_ANDAMENTO),
-            set: jest.fn()
-        });
-
-        Object.defineProperty(partida, 'currentJogador', {
-            get: jest.fn(() => 0),
-            set: jest.fn()
-        });
-
         const carta = {
             id: "c0",
             naipe: Naipe.Espadas,
@@ -88,16 +80,6 @@ describe("Pesca Padrão (Action)", () => {
     })
 
     test('um jogador pode pescar mais de uma carta do baralho', () => {
-        Object.defineProperty(partida, 'status', {
-            get: jest.fn(() => StatusPartida.EM_ANDAMENTO),
-            set: jest.fn()
-        });
-
-        Object.defineProperty(partida, 'currentJogador', {
-            get: jest.fn(() => 0),
-            set: jest.fn()
-        });
-
         const carta0 = {
             id: "c0",
             naipe: Naipe.Espadas,
@@ -119,16 +101,6 @@ describe("Pesca Padrão (Action)", () => {
     })
 
     test('após pescar cartas, o jogador não passa a vez', () => {
-        Object.defineProperty(partida, 'status', {
-            get: jest.fn(() => StatusPartida.EM_ANDAMENTO),
-            set: jest.fn()
-        });
-
-        Object.defineProperty(partida, 'currentJogador', {
-            get: jest.fn(() => 0),
-            set: jest.fn()
-        });
-
         const carta = {
             id: "c0",
             naipe: Naipe.Espadas,
