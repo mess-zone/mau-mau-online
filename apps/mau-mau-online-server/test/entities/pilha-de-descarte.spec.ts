@@ -2,41 +2,38 @@ import { Carta } from "@/entities/carta";
 import { PilhaDeDescarte } from "@/entities/pilha-de-descarte";
 import { Naipe } from "@/entities/naipe";
 import { NumeroCarta } from "@/entities/numero-carta";
-import { FakeStack } from "@test/doubles/fake-stack";
+import { Stack } from "@/entities/stack";
 
-describe("Pilha de Descate entity", () => {
-    let fakeStack: FakeStack<Carta>;
+jest.mock('../../src/entities/stack');
+let mockedStack = jest.mocked(Stack);
+
+describe("Pilha de Descarte entity", () => {
+    let stack: Stack<Carta>;
     let mesa: PilhaDeDescarte;
 
     beforeEach(() => {
-        fakeStack = new FakeStack<Carta>();
-        mesa = new PilhaDeDescarte(fakeStack);
+        jest.clearAllMocks()
+        stack = new Stack<Carta>();
+        mesa = new PilhaDeDescarte(stack);
     });
 
-    test("deve iniciar vazio de cartas", () => {
-       expect(mesa.size()).toBe(0)
-    })
-
     test('deve retornar quantas cartas existem na pilha', () => {
-        const stackSize = fakeStack.size()
-        expect(mesa.size()).toBe(stackSize)
+        mockedStack.prototype.size.mockReturnValueOnce(52)
+        expect(mesa.size()).toBe(52)
     })
 
     test('deve visualizar a carta no topo da pilha', () => {
-        expect(mesa.peek()).toBeUndefined()
-
-        const carta: Carta = {
+        const cartaTopo: Carta = {
             id: 'id0',
             naipe: Naipe.Espadas,
             numero: NumeroCarta.As
         }
+        mockedStack.prototype.peek.mockReturnValueOnce(cartaTopo)
 
-        mesa.botarCarta(carta)
-        expect(mesa.peek()).toBe(carta)
+        expect(mesa.peek()).toBe(cartaTopo)
     })
 
     test("deve botar uma carta qualquer no topo da pilha", () => {
-        expect(mesa.size()).toBe(0)
         const carta: Carta = {
             id: 'id0',
             naipe: Naipe.Espadas,
@@ -44,8 +41,7 @@ describe("Pilha de Descate entity", () => {
         }
 
         mesa.botarCarta(carta)
-        expect(mesa.size()).toBe(1)
-        expect(fakeStack.peek()).toBe(carta)
+        expect(mockedStack.prototype.push).toHaveBeenCalledWith(carta)
     })
 
 })
