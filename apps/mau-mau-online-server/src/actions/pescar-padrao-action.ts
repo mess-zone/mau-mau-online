@@ -1,21 +1,21 @@
 import { Partida } from "@/entities/partida";
-import { Action } from "@/entities/action";
+import { Action } from "@/actions/ports/action";
 import { StatusPartida } from "@/entities/status-partida";
 import { Carta } from "@/entities/carta";
 
-export type PescaPadraoConfig = {
+export type PescarPadraoConfig = {
     jogadorIndex: number,
     qtd?: number,
 }
 
-export class PescaPadraoAction implements Action {
+export class PescarPadraoAction implements Action {
     private readonly context: Partida
 
     constructor(context: Partida) {
         this.context = context
     }
 
-    public execute({ jogadorIndex, qtd = 1 }: PescaPadraoConfig): Carta[] {
+    public execute({ jogadorIndex, qtd = 1 }: PescarPadraoConfig): Carta[] {
         if(this.context.status !== StatusPartida.EM_ANDAMENTO) { throw new Error('A partida não está em andamento') }
         
         if(jogadorIndex !== this.context.currentJogador) { throw new Error('Não é a vez do jogador!') }

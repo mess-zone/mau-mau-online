@@ -1,4 +1,4 @@
-import { PescaPadraoAction } from "@/entities/actions/pesca-padrao-action";
+import { PescarPadraoAction } from "@/actions/pescar-padrao-action";
 import { Baralho } from "@/entities/baralho";
 import { Jogador } from "@/entities/jogador";
 import { Naipe } from "@/entities/naipe";
@@ -6,9 +6,9 @@ import { NumeroCarta } from "@/entities/numero-carta";
 import { Partida } from "@/entities/partida"
 import { StatusPartida } from "@/entities/status-partida";
 
-jest.mock('../../../src/entities/partida');
-jest.mock('../../../src/entities/baralho');
-jest.mock('../../../src/entities/jogador');
+jest.mock('../../src/entities/partida');
+jest.mock('../../src/entities/baralho');
+jest.mock('../../src/entities/jogador');
 let mockedPartida = jest.mocked(Partida);
 let mockedBaralho = jest.mocked(Baralho);
 let mockedJogador = jest.mocked(Jogador);
@@ -20,9 +20,9 @@ let mockedStatus: jest.Mock<StatusPartida>
 let mockedCurrentJogador: jest.Mock<number>
 
 
-describe("Pesca Padrão (Action)", () => {
+describe("Pescar Padrão (Action)", () => {
     let partida: Partida
-    let sut: PescaPadraoAction
+    let sut: PescarPadraoAction
 
 
     beforeEach(() => {
@@ -32,7 +32,7 @@ describe("Pesca Padrão (Action)", () => {
         mockedCurrentJogador = jest.fn(() => 0)
 
         partida = new Partida(null)
-        sut = new PescaPadraoAction(partida)
+        sut = new PescarPadraoAction(partida)
 
         Object.defineProperty(partida, 'status', {
             get: mockedStatus,
