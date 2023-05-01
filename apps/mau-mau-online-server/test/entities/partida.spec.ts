@@ -8,7 +8,7 @@ import { Stack } from "@/entities/stack";
 import { StatusPartida } from "@/entities/status-partida";
 import { FakeStack } from "@test/doubles/fake-stack";
 
-// TODO mock all entities, excepr Partida...
+// TODO mock all entities, except Partida...
 jest.mock('../doubles/fake-stack');
 
 let mockedFakeStack = jest.mocked(FakeStack);
@@ -72,6 +72,7 @@ describe("Partida entity", () => {
         expect(partida.getJogadores()[1].size()).toBe(7)
         expect(partida.getJogadores()[2].size()).toBe(7)
         expect(partida.getBaralho().size()).toBe(52 - (7 * 3))
+        expect(partida.getPilhaDeDescarte().size()).toBe(0)
 
 
     })

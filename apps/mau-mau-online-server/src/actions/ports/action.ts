@@ -1,5 +1,4 @@
-import { Carta } from "@/entities/carta";
 
 export interface Action {
-    execute(options: any): Carta[]
+    execute(options: any): any
 }
