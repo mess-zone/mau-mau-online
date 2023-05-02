@@ -85,7 +85,6 @@ export class Partida {
         return false
     }
 
-    // TODO finalizar vencido (um jogador não tem cartas) ou empatado (não tem cartas no baralho)
     // TODO permitir baralho com mais de um set de cartas
 
 }
