@@ -126,15 +126,29 @@ describe("Partida entity", () => {
         expect(sut.currentJogador).toBe(0)
     })
 
+    test('não deve finalizar a partida quando os jogadores ainda tem cartas na mão', () => {
+        sut.start()
+        expect(sut.currentJogador).toBe(0)
+        expect(sut.status).toBe(StatusPartida.EM_ANDAMENTO)
+
+        mockedJogador.prototype.size.mockReturnValue(0)
+        const isEnded = sut.checkEnd()
+
+        expect(sut.status).toBe(StatusPartida.EM_ANDAMENTO)
+        expect(isEnded).toBe(false)
+
+    })
+
     test('deve finalizar a partida quando um jogador não tiver mais cartas', () => {
         sut.start()
         expect(sut.currentJogador).toBe(0)
         expect(sut.status).toBe(StatusPartida.EM_ANDAMENTO)
 
         mockedJogador.prototype.size.mockReturnValue(0)
-        sut.checkEnd()
+        const isEnded = sut.checkEnd()
 
         expect(sut.status).toBe(StatusPartida.FINALIZADA)
+        expect(isEnded).toBe(true)
 
     })
 
@@ -145,9 +159,23 @@ describe("Partida entity", () => {
 
         mockedJogador.prototype.size.mockReturnValue(10)
         mockedBaralho.prototype.size.mockReturnValue(0)
-        sut.checkEnd()
+        const isEnded = sut.checkEnd()
 
         expect(sut.status).toBe(StatusPartida.FINALIZADA)
+        expect(isEnded).toBe(true)
+    })
+
+    test('não deve finalizar a partida quando o baralho ainda tiver cartas', () => {
+        sut.start()
+        expect(sut.currentJogador).toBe(0)
+        expect(sut.status).toBe(StatusPartida.EM_ANDAMENTO)
+
+        mockedJogador.prototype.size.mockReturnValue(10)
+        mockedBaralho.prototype.size.mockReturnValue(0)
+        const isEnded = sut.checkEnd()
+
+        expect(sut.status).toBe(StatusPartida.FINALIZADA)
+        expect(isEnded).toBe(false)
     })
 
     test.todo('indicar o ganhador da partida')

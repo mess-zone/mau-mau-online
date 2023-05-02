@@ -77,13 +77,12 @@ export class Partida {
     }
 
     public checkEnd() {
-        if(this.getJogadores()[this._currentJogador].size() == 0) {
+        if(this.getJogadores()[this._currentJogador].size() == 0 || this.getBaralho().size() == 0) {
             this._status = StatusPartida.FINALIZADA
+            return true
         }
-        
-        if(this.getBaralho().size() == 0) {
-            this._status = StatusPartida.FINALIZADA
-        }
+
+        return false
     }
 
     // TODO finalizar vencido (um jogador não tem cartas) ou empatado (não tem cartas no baralho)
