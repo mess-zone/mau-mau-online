@@ -1,43 +1,110 @@
 import './style.css'
 import typescriptLogo from './typescript.svg'
 import viteLogo from '/vite.svg'
-import { ArrayList, Baralho, Carta, GameController, Jogador, Partida, PilhaDeDescarte, Stack, shuffleArray } from '@mess-zone/mau-mau-online-core'
+import { ArrayList, Baralho, Carta, GameController, Jogador, Partida, PilhaDeDescarte, Stack } from '@mess-zone/mau-mau-online-core'
 
 document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
-  <div>
-    <a href="https://vitejs.dev" target="_blank">
-      <img src="${viteLogo}" class="logo" alt="Vite logo" />
-    </a>
-    <a href="https://www.typescriptlang.org/" target="_blank">
-      <img src="${typescriptLogo}" class="logo vanilla" alt="TypeScript logo" />
-    </a>
-    <h1>Vite + TypeScript</h1>
-    <div class="card">
-      <button id="counter" type="button"></button>
-    </div>
-    <p class="read-the-docs">
-      Click on the Vite and TypeScript logos to learn more ${shuffleArray([0, 1, 2, 3, 4, 5])}
-    </p>
-  </div>
+<header>
+<h1>mau mau </h1>
+<button id="btnStart">start</button>
+<button id="btnCancel">cancel</button>
+</header>
+
+<div class="container">
+  <section class="section">
+    <h2>Partida</h2>
+    <pre id="partida">
+
+    </pre>
+  </section>
+
+  <section class="section">
+    <h2>Baralho</h2>
+    <pre id="baralho">
+
+    </pre>
+  </section>
+
+  <section class="section">
+    <h2>Pilha de Descarte</h2>
+    <pre id="descarte">
+
+    </pre>
+  </section>
+
+  <section class="section">
+    <h2>Jogador 0</h2>
+    <pre id="jog0">
+
+    </pre>
+  </section>
+
+  <section class="section">
+    <h2>Jogador 1</h2>
+    <pre id="jog1">
+
+    </pre>
+  </section>
+
+</div>
+
 `
 
-// setupCounter(document.querySelector<HTMLButtonElement>('#counter')!)
+const btnStart = document.querySelector<HTMLButtonElement>('#btnStart')
+const btnCancel = document.querySelector<HTMLButtonElement>('#btnCancel')
+const prePartida = document.querySelector<HTMLButtonElement>('#partida')
+const preBaralho = document.querySelector<HTMLButtonElement>('#baralho')
+const preDescarte = document.querySelector<HTMLButtonElement>('#descarte')
+const preJogador0 = document.querySelector<HTMLButtonElement>('#jog0')
+const preJogador1 = document.querySelector<HTMLButtonElement>('#jog1')
 
-const baralhoStack = new Stack<Carta>()
-const baralho = new Baralho(baralhoStack)
-const descarteStack = new Stack<Carta>()
-const pilhaDeDescarte = new PilhaDeDescarte(descarteStack)
 
-const jog1List = new ArrayList<Carta>()
-const jogador1 = new Jogador(jog1List)
-const jog2List = new ArrayList<Carta>()
-const jogador2 = new Jogador(jog2List)
+let baralhoStack = new Stack<Carta>()
+let baralho = new Baralho(baralhoStack)
+let descarteStack = new Stack<Carta>()
+let pilhaDeDescarte = new PilhaDeDescarte(descarteStack)
 
-const partida = new Partida({ baralho, pilhaDeDescarte, jogadores: [jogador1, jogador2]})
-const game = new GameController(partida)
+let jog0List = new ArrayList<Carta>()
+let jogador0 = new Jogador(jog0List)
+let jog1List = new ArrayList<Carta>()
+let jogador1 = new Jogador(jog1List)
 
-// declare var __game: GameController;
+let partida: Partida
+let game: GameController
 
-// @ts-ignore
-window.__game = game
-console.log(game)
+
+btnStart.addEventListener('click', () => {
+  console.log('start')
+
+  baralhoStack = new Stack<Carta>()
+  baralho = new Baralho(baralhoStack)
+  descarteStack = new Stack<Carta>()
+  pilhaDeDescarte = new PilhaDeDescarte(descarteStack)
+
+  jog0List = new ArrayList<Carta>()
+  jogador0 = new Jogador(jog0List)
+  jog1List = new ArrayList<Carta>()
+  jogador1 = new Jogador(jog1List)
+
+  partida = new Partida({ baralho, pilhaDeDescarte, jogadores: [jogador0, jogador1]})
+  game = new GameController(partida)
+
+  // @ts-ignore
+  window.__game = game
+  console.log(game)
+
+  prePartida.innerHTML = JSON.stringify({
+    currentJogador: partida.currentJogador,
+    status: partida.status,
+  }, null, ' ')
+  preBaralho.innerHTML = JSON.stringify(baralho, null, ' ')
+  preDescarte.innerHTML = JSON.stringify(pilhaDeDescarte, null, ' ')
+  preJogador0.innerHTML = JSON.stringify(jogador0, null, ' ')
+  preJogador1.innerHTML = JSON.stringify(jogador1, null, ' ')
+})
+
+
+btnCancel.addEventListener('click', () => {
+  console.log('cancel')
+})
+
