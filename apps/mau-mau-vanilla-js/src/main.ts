@@ -1,16 +1,7 @@
 import './style.css'
 import typescriptLogo from './typescript.svg'
 import viteLogo from '/vite.svg'
-import { setupCounter } from './counter.ts'
-import { shuffleArray } from './logic/utils/shuffle-array.ts'
-import { GameController } from './logic/controllers/game-controller.ts'
-import { Partida } from './logic/entities/partida.ts'
-import { Jogador } from './logic/entities/jogador.ts'
-import { PilhaDeDescarte } from './logic/entities/pilha-de-descarte.ts'
-import { Baralho } from './logic/entities/baralho.ts'
-import { Stack } from './logic/entities/stack.ts'
-import { Carta } from './logic/entities/carta.ts'
-import { ArrayList } from './logic/entities/array-list.ts'
+import { ArrayList, Baralho, Carta, GameController, Jogador, Partida, PilhaDeDescarte, Stack, shuffleArray } from '@mess-zone/mau-mau-online-core'
 
 document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
   <div>
@@ -30,7 +21,7 @@ document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
   </div>
 `
 
-setupCounter(document.querySelector<HTMLButtonElement>('#counter')!)
+// setupCounter(document.querySelector<HTMLButtonElement>('#counter')!)
 
 const baralhoStack = new Stack<Carta>()
 const baralho = new Baralho(baralhoStack)

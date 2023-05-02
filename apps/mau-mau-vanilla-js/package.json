@@ -1,5 +1,5 @@
 {
-  "name": "mau-mau-vanilla-js",
+  "name": "@mess-zone/mau-mau-vanilla-js",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -7,6 +7,9 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview"
+  },
+  "dependencies": {
+    "@mess-zone/mau-mau-online-core": "*"
   },
   "devDependencies": {
     "typescript": "^5.0.2",

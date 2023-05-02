@@ -1,4 +1,6 @@
 export class Stack<T> {
+
+  // TODO deviar ser privado
     protected items: T[];
   
     constructor() {
