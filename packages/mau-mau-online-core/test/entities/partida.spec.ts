@@ -131,7 +131,8 @@ describe("Partida entity", () => {
         expect(sut.currentJogador).toBe(0)
         expect(sut.status).toBe(StatusPartida.EM_ANDAMENTO)
 
-        mockedJogador.prototype.size.mockReturnValue(0)
+        mockedJogador.prototype.size.mockReturnValue(4)
+        mockedBaralho.prototype.size.mockReturnValue(10)
         const isEnded = sut.checkEnd()
 
         expect(sut.status).toBe(StatusPartida.EM_ANDAMENTO)
@@ -145,6 +146,7 @@ describe("Partida entity", () => {
         expect(sut.status).toBe(StatusPartida.EM_ANDAMENTO)
 
         mockedJogador.prototype.size.mockReturnValue(0)
+        mockedBaralho.prototype.size.mockReturnValue(10)
         const isEnded = sut.checkEnd()
 
         expect(sut.status).toBe(StatusPartida.FINALIZADA)
@@ -165,16 +167,16 @@ describe("Partida entity", () => {
         expect(isEnded).toBe(true)
     })
 
-    test('não deve finalizar a partida quando o baralho ainda tiver cartas', () => {
+    test('não deve finalizar a partida enquanto o baralho ainda tiver cartas', () => {
         sut.start()
         expect(sut.currentJogador).toBe(0)
         expect(sut.status).toBe(StatusPartida.EM_ANDAMENTO)
 
         mockedJogador.prototype.size.mockReturnValue(10)
-        mockedBaralho.prototype.size.mockReturnValue(0)
+        mockedBaralho.prototype.size.mockReturnValue(10)
         const isEnded = sut.checkEnd()
 
-        expect(sut.status).toBe(StatusPartida.FINALIZADA)
+        expect(sut.status).toBe(StatusPartida.EM_ANDAMENTO)
         expect(isEnded).toBe(false)
     })
 
