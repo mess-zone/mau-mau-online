@@ -32,6 +32,7 @@ export class PescarPadraoAction implements Action {
             cartas.push(carta)
         }
 
+        this.context.checkEnd()
         return cartas
     }
 }

@@ -115,4 +115,22 @@ describe("Pescar Padrão (Action)", () => {
         // expect(mockedJogador.prototype.botarCarta).toHaveBeenNthCalledWith(1, carta)
         // expect(result).toEqual([carta])
     })
+
+    test('após pescar cartas, deve ser verificado se a partida acabou', () => {
+        const carta = {
+            id: "c0",
+            naipe: Naipe.Espadas,
+            numero: NumeroCarta.As
+        }
+        mockedBaralho.prototype.tirarCarta.mockReturnValueOnce(carta)
+        mockedPartida.prototype.checkEnd.mockReturnValueOnce(true)
+
+        const result = sut.execute({ jogadorIndex: 0 })
+
+        expect(mockedPartida.prototype.checkEnd).toHaveBeenCalled()
+        expect(mockedPartida.prototype.nextPlayer).toHaveBeenCalledTimes(0)
+        // expect(mockedBaralho.prototype.tirarCarta).toHaveBeenCalledTimes(1)
+        // expect(mockedJogador.prototype.botarCarta).toHaveBeenNthCalledWith(1, carta)
+        // expect(result).toEqual([carta])
+    })
 })
