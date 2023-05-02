@@ -11,17 +11,25 @@ let mockedCurrentJogador: jest.Mock<number>
 describe("Game Controller", () => {
 
     let partida: Partida
+    let sut: GameController
 
     test.todo('criar a sala')
     test.todo('entrar na sala')
     test.todo('sair da sala')
 
-    test("deve iniciar uma partida com 2 jogadores", () => {
+    beforeEach(() => {
         partida = new Partida(null)
-        const sut = new GameController(partida)
+        sut = new GameController(partida)
+    })
 
+    test("deve iniciar uma partida", () => {
         sut.startPartida()
-
         expect(mockedPartida.prototype.start).toHaveBeenCalledTimes(1)
+    })
+
+    test("deve cancelar uma partida", () => {
+        sut.cancelPartida()
+
+        expect(mockedPartida.prototype.cancel).toHaveBeenCalledTimes(1)
     })
 })

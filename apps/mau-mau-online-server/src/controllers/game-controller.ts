@@ -10,4 +10,8 @@ export class GameController {
     public startPartida() {
         this.partida.start()
     }
+
+    public cancelPartida() {
+        this.partida.cancel()
+    }
 }
