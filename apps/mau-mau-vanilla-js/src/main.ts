@@ -6,13 +6,13 @@ import { ArrayList, Baralho, Carta, GameController, Jogador, Partida, PilhaDeDes
 document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
 <header>
 <h1>mau mau </h1>
-<button id="btnStart">start</button>
-<button id="btnCancel">cancel</button>
 </header>
 
 <div class="container">
   <section class="section">
     <h2>Partida</h2>
+    <button id="btnStart">start</button>
+    <button id="btnCancel">cancel</button>
     <pre id="partida">
 
     </pre>
@@ -34,16 +34,18 @@ document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
 
   <section class="section">
     <h2>Jogador 0</h2>
-    <pre id="jog0">
+    <button id="btnPescar0">pescar</button>
+    <div id="jog0">
 
-    </pre>
+    </div>
   </section>
 
   <section class="section">
     <h2>Jogador 1</h2>
-    <pre id="jog1">
+    <button id="btnPescar1">pescar</button>
+    <div id="jog1">
 
-    </pre>
+    </div>
   </section>
 
 </div>
@@ -52,6 +54,10 @@ document.querySelector<HTMLDivElement>('#app')!.innerHTML = `
 
 const btnStart = document.querySelector<HTMLButtonElement>('#btnStart')
 const btnCancel = document.querySelector<HTMLButtonElement>('#btnCancel')
+
+const btnPescar0 = document.querySelector<HTMLButtonElement>('#btnPescar0')
+const btnPescar1 = document.querySelector<HTMLButtonElement>('#btnPescar1')
+
 const prePartida = document.querySelector<HTMLButtonElement>('#partida')
 const preBaralho = document.querySelector<HTMLButtonElement>('#baralho')
 const preDescarte = document.querySelector<HTMLButtonElement>('#descarte')
@@ -73,38 +79,79 @@ let partida: Partida
 let game: GameController
 
 
+baralhoStack = new Stack<Carta>()
+baralho = new Baralho(baralhoStack)
+descarteStack = new Stack<Carta>()
+pilhaDeDescarte = new PilhaDeDescarte(descarteStack)
+
+jog0List = new ArrayList<Carta>()
+jogador0 = new Jogador(jog0List)
+jog1List = new ArrayList<Carta>()
+jogador1 = new Jogador(jog1List)
+
+partida = new Partida({ baralho, pilhaDeDescarte, jogadores: [jogador0, jogador1]})
+game = new GameController(partida)
+
+// @ts-ignore
+window.__game = game
+console.log(game)
+
+updateScreen()
+
 btnStart.addEventListener('click', () => {
-  console.log('start')
+  game.execute('start')
+  updateScreen()
+})
 
-  baralhoStack = new Stack<Carta>()
-  baralho = new Baralho(baralhoStack)
-  descarteStack = new Stack<Carta>()
-  pilhaDeDescarte = new PilhaDeDescarte(descarteStack)
 
-  jog0List = new ArrayList<Carta>()
-  jogador0 = new Jogador(jog0List)
-  jog1List = new ArrayList<Carta>()
-  jogador1 = new Jogador(jog1List)
+btnCancel.addEventListener('click', () => {
+  game.execute('cancel')
+  updateScreen()
+})
 
-  partida = new Partida({ baralho, pilhaDeDescarte, jogadores: [jogador0, jogador1]})
-  game = new GameController(partida)
 
-  // @ts-ignore
-  window.__game = game
-  console.log(game)
+btnPescar0.addEventListener('click', () => {
+  console.log('click 0')
+  game.execute('pescar-padrao', { jogadorIndex: 0 })
+  updateScreen()
+})
 
+btnPescar1.addEventListener('click', () => {
+  console.log('click 1')
+  game.execute('pescar-padrao', { jogadorIndex: 1 })
+  updateScreen()
+})
+
+function updateScreen() {
+  console.log('update screen')
   prePartida.innerHTML = JSON.stringify({
     currentJogador: partida.currentJogador,
     status: partida.status,
   }, null, ' ')
   preBaralho.innerHTML = JSON.stringify(baralho, null, ' ')
-  preDescarte.innerHTML = JSON.stringify(pilhaDeDescarte, null, ' ')
-  preJogador0.innerHTML = JSON.stringify(jogador0, null, ' ')
-  preJogador1.innerHTML = JSON.stringify(jogador1, null, ' ')
-})
+  preDescarte.innerHTML = `<div>size: ${pilhaDeDescarte.size()}</div> <div>topo: ${JSON.stringify(pilhaDeDescarte.peek(), null, ' ') }</div><hr/>` + JSON.stringify(pilhaDeDescarte, null, ' ')
 
+  renderCartas(0, [...jogador0.iterator()], preJogador0)
+  renderCartas(1, [...jogador1.iterator()], preJogador1)
+}
 
-btnCancel.addEventListener('click', () => {
-  console.log('cancel')
-})
+function renderCartas(jogadorIndex: number, list: Carta[], listContainer: HTMLElement) {
+  listContainer.innerHTML = ''
+  for(const carta of list) {
+    const cartaEl = document.createElement('div')
+    cartaEl.classList.add('carta')
+    cartaEl.innerHTML = `${carta.id} ${carta.naipe} ${carta.numero}`
+
+    const btnDescartar = document.createElement('button')
+    btnDescartar.innerText = 'descartar'
+    btnDescartar.addEventListener('click', () => {
+      console.log('descartar ', carta)
+      game.execute('descartar-padrao', { jogadorIndex, cartas:[carta] })
+      updateScreen()
+    })
+
+    cartaEl.appendChild(btnDescartar)
+    listContainer.appendChild(cartaEl) 
+  }
+}
 
