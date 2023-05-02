@@ -1,16 +1,23 @@
+import { CancelarPartidaAction } from "@/actions/cancelar-partida-action";
+import { DescartarPadraoAction } from "@/actions/descartar-padrao-action";
+import { IniciarPartidaAction } from "@/actions/iniciar-partida-action";
+import { PescarPadraoAction } from "@/actions/pescar-padrao-action";
 import { GameController } from "@/controllers/game-controller"
-import { Partida } from "@/entities/partida"
-import { StatusPartida } from "@/entities/status-partida"
+import { Carta } from "@/entities/carta";
+import { Naipe } from "@/entities/naipe";
+import { NumeroCarta } from "@/entities/numero-carta";
 
-jest.mock('../../src/entities/partida');
-let mockedPartida = jest.mocked(Partida);
-
-let mockedStatus: jest.Mock<StatusPartida>
-let mockedCurrentJogador: jest.Mock<number>
+jest.mock('../../src/actions/iniciar-partida-action');
+jest.mock('../../src/actions/cancelar-partida-action');
+jest.mock('../../src/actions/pescar-padrao-action');
+jest.mock('../../src/actions/descartar-padrao-action');
+let iniciarPartidaAction = jest.mocked(IniciarPartidaAction);
+let cancelarPartidaAction = jest.mocked(CancelarPartidaAction);
+let pescarPadraoAction = jest.mocked(PescarPadraoAction);
+let descartarPadraoAction = jest.mocked(DescartarPadraoAction);
 
 describe("Game Controller", () => {
 
-    let partida: Partida
     let sut: GameController
 
     test.todo('criar a sala')
@@ -18,18 +25,31 @@ describe("Game Controller", () => {
     test.todo('sair da sala')
 
     beforeEach(() => {
-        partida = new Partida(null)
-        sut = new GameController(partida)
+        sut = new GameController(null)
     })
 
     test("deve iniciar uma partida", () => {
-        sut.startPartida()
-        expect(mockedPartida.prototype.start).toHaveBeenCalledTimes(1)
+        sut.execute('start')
+        expect(iniciarPartidaAction.prototype.execute).toHaveBeenCalledTimes(1)
     })
 
     test("deve cancelar uma partida", () => {
-        sut.cancelPartida()
-
-        expect(mockedPartida.prototype.cancel).toHaveBeenCalledTimes(1)
+        sut.execute('cancel')
+        expect(cancelarPartidaAction.prototype.execute).toHaveBeenCalledTimes(1)
+    })
+    
+    test("jogador 0 deve pescar uma carta", () => {
+        sut.execute('pescar-padrao', { jogadorIndex: 0 })
+        expect(pescarPadraoAction.prototype.execute).toHaveBeenCalledWith({ jogadorIndex: 0 })
+    })
+    
+    test("jogador 0 deve descartar uma carta", () => {
+        const carta: Carta = {
+            id: "cartaId",
+            naipe: Naipe.Espadas,
+            numero: NumeroCarta.As
+        }
+        sut.execute('descartar-padrao', { jogadorIndex: 0, cartas: [carta] })
+        expect(descartarPadraoAction.prototype.execute).toHaveBeenCalledWith({ jogadorIndex: 0, cartas: [carta] })
     })
 })
