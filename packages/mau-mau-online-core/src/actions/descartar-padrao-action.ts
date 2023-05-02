@@ -47,7 +47,9 @@ export class DescartarPadraoAction implements Action {
             cartasDescartadas.push(carta)
         }
 
-        this.context.nextPlayer()
+        if(!this.context.checkEnd()) {
+            this.context.nextPlayer()
+        }
         return cartasDescartadas
 
     }

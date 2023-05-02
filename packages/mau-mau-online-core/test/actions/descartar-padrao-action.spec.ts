@@ -202,17 +202,35 @@ describe("Descartar Padrão (Action)", () => {
 
     })
 
-    test('após descarta cartas, a vez de jogar passa para o próximo jogador', () => {
+    test('após descarta cartas, deve ser verificado se a partida acabou', () => {
         const carta = {
             id: "c0",
             naipe: Naipe.Espadas,
             numero: NumeroCarta.As
         }
         mockedJogador.prototype.tirarCarta.mockImplementationOnce(carta => carta)
+        mockedPartida.prototype.checkEnd.mockReturnValueOnce(true)
 
 
         const result = sut.execute({ jogadorIndex: 0, cartas: [carta] })
 
+        expect(mockedPartida.prototype.checkEnd).toHaveBeenCalled()
+        expect(mockedPartida.prototype.nextPlayer).toHaveBeenCalledTimes(0)
+    })
+
+    test('após descarta cartas, se a partida não acabou, a vez de jogar passa para o próximo jogador', () => {
+        const carta = {
+            id: "c0",
+            naipe: Naipe.Espadas,
+            numero: NumeroCarta.As
+        }
+        mockedJogador.prototype.tirarCarta.mockImplementationOnce(carta => carta)
+        mockedPartida.prototype.checkEnd.mockReturnValueOnce(false)
+
+
+        const result = sut.execute({ jogadorIndex: 0, cartas: [carta] })
+
+        expect(mockedPartida.prototype.checkEnd).toHaveBeenCalled()
         expect(mockedPartida.prototype.nextPlayer).toHaveBeenCalledTimes(1)
         // expect(mockedJogador.prototype.tirarCarta).toHaveBeenNthCalledWith(1, carta)
         // expect(mockedPilhaDeDescarte.prototype.botarCarta).toHaveBeenNthCalledWith(1, carta)
