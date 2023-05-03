@@ -71,6 +71,9 @@ describe("Descartar Padrão (Action)", () => {
         expect(mockedJogador.prototype.tirarCarta).toHaveBeenNthCalledWith(1, carta)
         expect(mockedPilhaDeDescarte.prototype.botarCarta).toHaveBeenNthCalledWith(1, carta)
         expect(result).toEqual([carta])
+
+        expect(mockedPartida.prototype.notifyObservers).toHaveBeenCalledWith({ tipo: 'descartar-padrao', dados: { jogadorIndex: 0, cartas: [carta] } })
+
     })
 
     test('um jogador pode descartar mais de uma carta, se elas forem todas iguais (naipe e número)', () => {
@@ -94,6 +97,9 @@ describe("Descartar Padrão (Action)", () => {
         expect(mockedPilhaDeDescarte.prototype.botarCarta).toHaveBeenNthCalledWith(1, carta0)
         expect(mockedPilhaDeDescarte.prototype.botarCarta).toHaveBeenNthCalledWith(2, carta1)
         expect(result).toEqual([carta0, carta1])
+
+        expect(mockedPartida.prototype.notifyObservers).toHaveBeenCalledWith({ tipo: 'descartar-padrao', dados: { jogadorIndex: 0, cartas: [carta0, carta1] } })
+
     })
 
     test('um jogador não pode descartar mais de uma carta, se elas forem diferentes', () => {

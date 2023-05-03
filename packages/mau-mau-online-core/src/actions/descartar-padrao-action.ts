@@ -47,6 +47,8 @@ export class DescartarPadraoAction implements Action {
             cartasDescartadas.push(carta)
         }
 
+        this.context.notifyObservers({ tipo: 'descartar-padrao', dados: { jogadorIndex, cartas: cartasDescartadas } })
+
         if(!this.context.checkEnd()) {
             this.context.nextPlayer()
         }

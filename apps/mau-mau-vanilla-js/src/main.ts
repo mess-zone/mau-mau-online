@@ -157,9 +157,7 @@ function renderCartas(jogadorIndex: number, list: Carta[], listContainer: HTMLEl
     const btnDescartar = document.createElement('button')
     btnDescartar.innerText = 'descartar'
     btnDescartar.addEventListener('click', () => {
-      console.log('descartar ', carta)
       game.execute('descartar-padrao', { jogadorIndex, cartas:[carta] })
-      updateScreen()
     })
 
     cartaEl.appendChild(btnDescartar)
