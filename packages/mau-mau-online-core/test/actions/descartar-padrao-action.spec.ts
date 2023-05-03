@@ -46,16 +46,14 @@ describe("Descartar Padrão (Action)", () => {
     test('um jogador não pode jogar se a partida não estiver em andamento', () => {
         mockedStatus.mockReturnValue(StatusPartida.CANCELADA)
 
-        expect(() => {  sut.execute({ jogadorIndex: 0, cartas: [] }) }).toThrowError('A partida não está em andamento')
+        expect(() => {  sut.execute({ jogadorIndex: 0, cartasId: [] }) }).toThrowError('A partida não está em andamento')
     })
 
     test('um jogador não pode jogar se não for a sua vez', () => {
         mockedCurrentJogador.mockReturnValue(1)
 
-        expect(() => {  sut.execute({ jogadorIndex: 0, cartas: [] }) }).toThrowError('Não é a vez do jogador')
+        expect(() => {  sut.execute({ jogadorIndex: 0, cartasId: [] }) }).toThrowError('Não é a vez do jogador')
     })
-
-    test.todo('um jogador não pode descartar cartas que não possui / se não houver cartas suficientes')
 
     test('um jogador pode descartar uma única carta', () => {
         const carta = {
@@ -63,16 +61,36 @@ describe("Descartar Padrão (Action)", () => {
             naipe: Naipe.Espadas,
             numero: NumeroCarta.As
         }
+        mockedJogador.prototype.getCartaById.mockReturnValue(carta)
         mockedJogador.prototype.tirarCarta.mockImplementationOnce(carta => carta)
 
+        const result = sut.execute({ jogadorIndex: 0, cartasId: [carta.id] })
 
-        const result = sut.execute({ jogadorIndex: 0, cartas: [carta] })
-
+        expect(mockedJogador.prototype.getCartaById).toHaveBeenNthCalledWith(1, carta.id)
         expect(mockedJogador.prototype.tirarCarta).toHaveBeenNthCalledWith(1, carta)
         expect(mockedPilhaDeDescarte.prototype.botarCarta).toHaveBeenNthCalledWith(1, carta)
         expect(result).toEqual([carta])
 
         expect(mockedPartida.prototype.notifyObservers).toHaveBeenCalledWith({ tipo: 'descartar-padrao', dados: { jogadorIndex: 0, cartas: [carta] } })
+
+    })
+
+    test('um jogador não pode descartar carta que não possui', () => {
+        const carta = {
+            id: "c0",
+            naipe: Naipe.Espadas,
+            numero: NumeroCarta.As
+        }
+        mockedJogador.prototype.getCartaById.mockReturnValue(undefined)
+
+        const result = sut.execute({ jogadorIndex: 0, cartasId: [carta.id] })
+
+        expect(mockedJogador.prototype.getCartaById).toHaveBeenNthCalledWith(1, carta.id)
+        expect(mockedJogador.prototype.tirarCarta).toHaveBeenCalledTimes(0)
+        expect(mockedPilhaDeDescarte.prototype.botarCarta).toHaveBeenCalledTimes(0)
+        expect(result).toEqual([])
+
+        expect(mockedPartida.prototype.notifyObservers).toHaveBeenCalledTimes(0)
 
     })
 
@@ -87,10 +105,11 @@ describe("Descartar Padrão (Action)", () => {
             naipe: Naipe.Espadas,
             numero: NumeroCarta.As
         }
+        mockedJogador.prototype.getCartaById.mockReturnValueOnce(carta0).mockReturnValueOnce(carta1)
         mockedJogador.prototype.tirarCarta.mockImplementation(carta => carta)
 
 
-        const result = sut.execute({ jogadorIndex: 0, cartas: [carta0, carta1] })
+        const result = sut.execute({ jogadorIndex: 0, cartasId: [carta0.id, carta1.id] })
 
         expect(mockedJogador.prototype.tirarCarta).toHaveBeenNthCalledWith(1, carta0)
         expect(mockedJogador.prototype.tirarCarta).toHaveBeenNthCalledWith(2, carta1)
@@ -113,9 +132,11 @@ describe("Descartar Padrão (Action)", () => {
             naipe: Naipe.Ouros,
             numero: NumeroCarta.Dez
         }
+
+        mockedJogador.prototype.getCartaById.mockReturnValueOnce(carta0).mockReturnValueOnce(carta1)
         mockedJogador.prototype.tirarCarta.mockImplementation(carta => carta)
 
-        expect(() => {  sut.execute({ jogadorIndex: 0, cartas: [carta0, carta1] }) }).toThrowError('Ação não permitida: as cartas descartadas devem ser iguais (mesmo naipe e número)')
+        expect(() => {  sut.execute({ jogadorIndex: 0, cartasId: [carta0.id, carta1.id] }) }).toThrowError('Ação não permitida: as cartas descartadas devem ser iguais (mesmo naipe e número)')
     })
 
     test('se a pilha estiver vazia, o jogador pode descartar qualquer carta', () => {
@@ -127,10 +148,13 @@ describe("Descartar Padrão (Action)", () => {
             naipe: Naipe.Espadas,
             numero: NumeroCarta.As
         }
+
+        mockedJogador.prototype.getCartaById.mockReturnValueOnce(carta)
+
         mockedJogador.prototype.tirarCarta.mockImplementationOnce(carta => carta)
 
 
-        const result = sut.execute({ jogadorIndex: 0, cartas: [carta] })
+        const result = sut.execute({ jogadorIndex: 0, cartasId: [carta.id] })
 
         expect(mockedJogador.prototype.tirarCarta).toHaveBeenNthCalledWith(1, carta)
         expect(mockedPilhaDeDescarte.prototype.botarCarta).toHaveBeenNthCalledWith(1, carta)
@@ -143,19 +167,22 @@ describe("Descartar Padrão (Action)", () => {
             naipe: Naipe.Espadas,
             numero: NumeroCarta.Rei
         }
+
+        
         mockedPilhaDeDescarte.prototype.size.mockReturnValue(1)
         mockedPilhaDeDescarte.prototype.peek.mockReturnValue(cartaTopoPilha)
-
+        
         const carta0 = {
             id: "c0",
             naipe: Naipe.Espadas,
             numero: NumeroCarta.As
         }
-
+        
+        mockedJogador.prototype.getCartaById.mockReturnValueOnce(carta0)
         mockedJogador.prototype.tirarCarta.mockImplementation(carta => carta)
 
 
-        const result = sut.execute({ jogadorIndex: 0, cartas: [carta0] })
+        const result = sut.execute({ jogadorIndex: 0, cartasId: [carta0.id] })
 
         expect(mockedJogador.prototype.tirarCarta).toHaveBeenNthCalledWith(1, carta0)
         expect(mockedPilhaDeDescarte.prototype.botarCarta).toHaveBeenNthCalledWith(1, carta0)
@@ -177,9 +204,10 @@ describe("Descartar Padrão (Action)", () => {
             numero: NumeroCarta.Rei
         }
 
+        mockedJogador.prototype.getCartaById.mockReturnValueOnce(carta0)
         mockedJogador.prototype.tirarCarta.mockImplementation(carta => carta)
 
-        const result = sut.execute({ jogadorIndex: 0, cartas: [carta0] })
+        const result = sut.execute({ jogadorIndex: 0, cartasId: [carta0.id] })
 
         expect(mockedJogador.prototype.tirarCarta).toHaveBeenNthCalledWith(1, carta0)
         expect(mockedPilhaDeDescarte.prototype.botarCarta).toHaveBeenNthCalledWith(1, carta0)
@@ -201,10 +229,11 @@ describe("Descartar Padrão (Action)", () => {
             numero: NumeroCarta.As
         }
 
+        mockedJogador.prototype.getCartaById.mockReturnValueOnce(carta0)
         mockedJogador.prototype.tirarCarta.mockImplementation(carta => carta)
 
 
-        expect(() => {  sut.execute({ jogadorIndex: 0, cartas: [carta0] }) }).toThrowError('Ação não permitida: as cartas descartadas devem ter o mesmo naipe ou número da carta no topo da pilha de descarte')
+        expect(() => {  sut.execute({ jogadorIndex: 0, cartasId: [carta0.id] }) }).toThrowError('Ação não permitida: as cartas descartadas devem ter o mesmo naipe ou número da carta no topo da pilha de descarte')
 
     })
 
@@ -214,11 +243,14 @@ describe("Descartar Padrão (Action)", () => {
             naipe: Naipe.Espadas,
             numero: NumeroCarta.As
         }
+
+        mockedJogador.prototype.getCartaById.mockReturnValueOnce(carta)
+
         mockedJogador.prototype.tirarCarta.mockImplementationOnce(carta => carta)
         mockedPartida.prototype.checkEnd.mockReturnValueOnce(true)
 
 
-        const result = sut.execute({ jogadorIndex: 0, cartas: [carta] })
+        const result = sut.execute({ jogadorIndex: 0, cartasId: [carta.id] })
 
         expect(mockedPartida.prototype.checkEnd).toHaveBeenCalled()
         expect(mockedPartida.prototype.nextPlayer).toHaveBeenCalledTimes(0)
@@ -230,11 +262,14 @@ describe("Descartar Padrão (Action)", () => {
             naipe: Naipe.Espadas,
             numero: NumeroCarta.As
         }
+
+        mockedJogador.prototype.getCartaById.mockReturnValueOnce(carta)
+
         mockedJogador.prototype.tirarCarta.mockImplementationOnce(carta => carta)
         mockedPartida.prototype.checkEnd.mockReturnValueOnce(false)
 
 
-        const result = sut.execute({ jogadorIndex: 0, cartas: [carta] })
+        const result = sut.execute({ jogadorIndex: 0, cartasId: [carta.id] })
 
         expect(mockedPartida.prototype.checkEnd).toHaveBeenCalled()
         expect(mockedPartida.prototype.nextPlayer).toHaveBeenCalledTimes(1)

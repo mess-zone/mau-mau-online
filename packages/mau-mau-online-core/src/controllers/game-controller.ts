@@ -43,7 +43,7 @@ export class GameController {
             'descartar-padrao',
             (partida: Partida, options: CommandOptions) => {
                 const action = new DescartarPadraoAction(partida)
-                action.execute({ jogadorIndex: options.jogadorIndex, cartas: options.cartas })
+                action.execute({ jogadorIndex: options.jogadorIndex, cartasId: options.cartas })
             }
         )
     }
