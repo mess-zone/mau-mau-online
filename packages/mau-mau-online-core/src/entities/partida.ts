@@ -90,7 +90,7 @@ export class Partida extends Subject {
     }
 
     public checkEnd() {
-        if(this.getJogadores()[this._currentJogador].size() == 0 || this.getBaralho().size() == 0) {
+        if(this.getJogadores()[this._currentJogador].size() == 0) {
             this._status = StatusPartida.FINALIZADA
             this.notifyObservers({ tipo: 'finalized', dados: { } })
 

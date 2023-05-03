@@ -189,32 +189,32 @@ describe("Partida entity", () => {
         expect(notifyObservers).toHaveBeenCalledWith({ tipo: 'finalized', dados: { } })
     })
 
-    test('deve finalizar a partida quando o baralho não tiver mais cartas', () => {
-        sut.start()
-        expect(sut.currentJogador).toBe(0)
-        expect(sut.status).toBe(StatusPartida.EM_ANDAMENTO)
+    // test('deve finalizar a partida quando o baralho não tiver mais cartas', () => {
+    //     sut.start()
+    //     expect(sut.currentJogador).toBe(0)
+    //     expect(sut.status).toBe(StatusPartida.EM_ANDAMENTO)
 
-        mockedJogador.prototype.size.mockReturnValue(10)
-        mockedBaralho.prototype.size.mockReturnValue(0)
-        const isEnded = sut.checkEnd()
+    //     mockedJogador.prototype.size.mockReturnValue(10)
+    //     mockedBaralho.prototype.size.mockReturnValue(0)
+    //     const isEnded = sut.checkEnd()
 
-        expect(sut.status).toBe(StatusPartida.FINALIZADA)
-        expect(isEnded).toBe(true)
-        expect(notifyObservers).toHaveBeenCalledWith({ tipo: 'finalized', dados: { } })
-    })
+    //     expect(sut.status).toBe(StatusPartida.FINALIZADA)
+    //     expect(isEnded).toBe(true)
+    //     expect(notifyObservers).toHaveBeenCalledWith({ tipo: 'finalized', dados: { } })
+    // })
 
-    test('não deve finalizar a partida enquanto o baralho ainda tiver cartas', () => {
-        sut.start()
-        expect(sut.currentJogador).toBe(0)
-        expect(sut.status).toBe(StatusPartida.EM_ANDAMENTO)
+    // test('não deve finalizar a partida enquanto o baralho ainda tiver cartas', () => {
+    //     sut.start()
+    //     expect(sut.currentJogador).toBe(0)
+    //     expect(sut.status).toBe(StatusPartida.EM_ANDAMENTO)
 
-        mockedJogador.prototype.size.mockReturnValue(10)
-        mockedBaralho.prototype.size.mockReturnValue(10)
-        const isEnded = sut.checkEnd()
+    //     mockedJogador.prototype.size.mockReturnValue(10)
+    //     mockedBaralho.prototype.size.mockReturnValue(10)
+    //     const isEnded = sut.checkEnd()
 
-        expect(sut.status).toBe(StatusPartida.EM_ANDAMENTO)
-        expect(isEnded).toBe(false)
-    })
+    //     expect(sut.status).toBe(StatusPartida.EM_ANDAMENTO)
+    //     expect(isEnded).toBe(false)
+    // })
 
     test.todo('indicar o ganhador da partida')
 
