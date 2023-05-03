@@ -6,6 +6,7 @@ import { ArrayList } from "../entities/array-list"
  */
 export class Jogador {
     private readonly id: string
+    private active: boolean = true
     private list: ArrayList<Carta>
 
     constructor(id: string, list: ArrayList<Carta>) {
@@ -15,6 +16,14 @@ export class Jogador {
 
     public getId() {
         return this.id
+    }
+
+    public isActive() {
+        return this.active
+    }
+
+    public setActive(active: boolean) {
+        this.active = active
     }
 
     public size() {

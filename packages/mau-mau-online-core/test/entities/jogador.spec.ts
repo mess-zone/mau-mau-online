@@ -23,6 +23,15 @@ describe("Jogador entity", () => {
 
        expect(sut.size()).toBe(0)
        expect(sut.getId()).toBe('valid-id')
+       expect(sut.isActive()).toBeTruthy()
+    })
+
+    test("deve inativa/ativar um jogador", () => {
+       expect(sut.isActive()).toBeTruthy()
+       sut.setActive(false)
+       expect(sut.isActive()).toBeFalsy()
+       sut.setActive(true)
+       expect(sut.isActive()).toBeTruthy()
     })
 
     test("deve botar uma carta qualquer no final da lista", () => {
