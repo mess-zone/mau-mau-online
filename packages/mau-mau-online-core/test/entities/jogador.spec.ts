@@ -15,13 +15,14 @@ describe("Jogador entity", () => {
     beforeEach(() => {
         jest.clearAllMocks()
         list = new ArrayList<Carta>()
-        sut = new Jogador(list)
+        sut = new Jogador('valid-id', list)
     });
 
     test("deve iniciar vazio de cartas", () => {
         mockedList.prototype.size.mockReturnValueOnce(0)
 
        expect(sut.size()).toBe(0)
+       expect(sut.getId()).toBe('valid-id')
     })
 
     test("deve botar uma carta qualquer no final da lista", () => {

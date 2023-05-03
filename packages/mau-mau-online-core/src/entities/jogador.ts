@@ -5,10 +5,16 @@ import { ArrayList } from "../entities/array-list"
  * Representa as cartas na mão de um jogador
  */
 export class Jogador {
+    private readonly id: string
     private list: ArrayList<Carta>
 
-    constructor(list: ArrayList<Carta>) {
+    constructor(id: string, list: ArrayList<Carta>) {
+        this.id = id
         this.list = list
+    }
+
+    public getId() {
+        return this.id
     }
 
     public size() {
