@@ -77,6 +77,9 @@ describe("Pescar Padrão (Action)", () => {
         expect(mockedBaralho.prototype.tirarCarta).toHaveBeenCalledTimes(1)
         expect(mockedJogador.prototype.botarCarta).toHaveBeenNthCalledWith(1, carta)
         expect(result).toEqual([carta])
+
+        expect(mockedPartida.prototype.notifyObservers).toHaveBeenCalledWith({ tipo: 'pescar-padrao', dados: { jogadorIndex: 0, cartas: [carta] } })
+
     })
 
     test('um jogador pode pescar mais de uma carta do baralho', () => {
@@ -98,6 +101,9 @@ describe("Pescar Padrão (Action)", () => {
         expect(mockedJogador.prototype.botarCarta).toHaveBeenNthCalledWith(1, carta0)
         expect(mockedJogador.prototype.botarCarta).toHaveBeenNthCalledWith(2, carta1)
         expect(result).toEqual([carta0, carta1])
+
+        expect(mockedPartida.prototype.notifyObservers).toHaveBeenCalledWith({ tipo: 'pescar-padrao', dados: { jogadorIndex: 0, cartas: [carta0, carta1] } })
+
     })
 
     test('após pescar cartas, o jogador não passa a vez', () => {

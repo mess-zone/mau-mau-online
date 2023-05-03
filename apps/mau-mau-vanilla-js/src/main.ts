@@ -112,6 +112,7 @@ class ConcreteObserver implements Observer {
   }
 }
 
+// motifica a tela para se atualizar com o estado atual do jogo
 const observer = new ConcreteObserver(partida)
 
 
@@ -121,22 +122,16 @@ btnStart.addEventListener('click', () => {
   game.execute('start')
 })
 
-
 btnCancel.addEventListener('click', () => {
   game.execute('cancel')
 })
 
-
 btnPescar0.addEventListener('click', () => {
-  console.log('click 0')
   game.execute('pescar-padrao', { jogadorIndex: 0 })
-  updateScreen()
 })
 
 btnPescar1.addEventListener('click', () => {
-  console.log('click 1')
   game.execute('pescar-padrao', { jogadorIndex: 1 })
-  updateScreen()
 })
 
 function updateScreen() {

@@ -32,6 +32,8 @@ export class PescarPadraoAction implements Action {
             cartas.push(carta)
         }
 
+        this.context.notifyObservers({ tipo: 'pescar-padrao', dados: { jogadorIndex, cartas } })
+
         this.context.checkEnd()
         return cartas
     }
