@@ -35,7 +35,7 @@ export class GameController {
             'pescar-padrao',
             (partida: Partida, options: CommandOptions) => {
                 const action = new PescarPadraoAction(partida)
-                action.execute({ jogadorIndex: options.jogadorIndex })
+                action.execute({ jogadorId: options.jogadorIndex })
             }
         )
         this.commandMap.set(

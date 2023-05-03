@@ -47,14 +47,16 @@ describe("Pescar Padrão (Action)", () => {
 
     test('um jogador não pode jogar se a partida não estiver em andamento', () => {
         mockedStatus.mockReturnValue(StatusPartida.CANCELADA)
+        mockedPartida.prototype.getJogadorById.mockReturnValue(new Jogador(null))
 
-        expect(() => {  sut.execute({ jogadorIndex: 0 }) }).toThrowError('A partida não está em andamento')
+        expect(() => {  sut.execute({ jogadorId: '0' }) }).toThrowError('A partida não está em andamento')
     })
 
     test('um jogador não pode jogar se não for a sua vez', () => {
         mockedCurrentJogador.mockReturnValue(1)
+        mockedPartida.prototype.getJogadorById.mockReturnValue(undefined)
 
-        expect(() => {  sut.execute({ jogadorIndex: 0 }) }).toThrowError('Não é a vez do jogador')
+        expect(() => {  sut.execute({ jogadorId: '0' }) }).toThrowError('Não é a vez do jogador')
     })
 
     test('se não houver cartas suficientes no baralho, deve trazer as cartas da pilha de descarte embaralhadas', () => {
@@ -65,9 +67,11 @@ describe("Pescar Padrão (Action)", () => {
             naipe: Naipe.Espadas,
             numero: NumeroCarta.As
         }
+        mockedPartida.prototype.getJogadorById.mockReturnValue(new Jogador(null))
+        mockedJogador.prototype.getId.mockReturnValue('c0')
         mockedBaralho.prototype.tirarCarta.mockReturnValue(carta)
 
-        const result = sut.execute({ jogadorIndex: 0, qtd: 2 })
+        const result = sut.execute({ jogadorId: '0', qtd: 2 })
 
         expect(mockedPartida.prototype.refillBaralho).toHaveBeenCalledTimes(1)
         expect(mockedBaralho.prototype.tirarCarta).toHaveBeenCalledTimes(2)
@@ -75,14 +79,16 @@ describe("Pescar Padrão (Action)", () => {
         expect(result).toEqual([carta, carta])
 
         // expect(mockedPartida.prototype.notifyObservers).toHaveBeenCalledWith({ tipo: 'refill', dados: { cartas: [carta, carta] } })
-        expect(mockedPartida.prototype.notifyObservers).toHaveBeenCalledWith({ tipo: 'pescar-padrao', dados: { jogadorIndex: 0, cartas: [carta, carta] } })
+        expect(mockedPartida.prototype.notifyObservers).toHaveBeenCalledWith({ tipo: 'pescar-padrao', dados: { jogadorId: '0', cartas: [carta, carta] } })
 
     })
 
     test('se após trazer cartas da pilha de descarte, ainda não houver cartas suficientes para pescar do baralho, deve retornar um erro', () => {
         mockedBaralho.prototype.size.mockReturnValueOnce(0).mockReturnValueOnce(1)
 
-        expect(() => { sut.execute({ jogadorIndex: 0, qtd: 2 }) }).toThrowError('Não há cartas suficientes disponíveis no baralho!')
+        mockedPartida.prototype.getJogadorById.mockReturnValue(new Jogador(null))
+        mockedJogador.prototype.getId.mockReturnValue('c0')
+        expect(() => { sut.execute({ jogadorId: '0', qtd: 2 }) }).toThrowError('Não há cartas suficientes disponíveis no baralho!')
     })
 
     test('um jogador pode pescar uma única carta do baralho', () => {
@@ -91,15 +97,17 @@ describe("Pescar Padrão (Action)", () => {
             naipe: Naipe.Espadas,
             numero: NumeroCarta.As
         }
+        mockedPartida.prototype.getJogadorById.mockReturnValue(new Jogador(null))
+        mockedJogador.prototype.getId.mockReturnValue('c0')
         mockedBaralho.prototype.tirarCarta.mockReturnValueOnce(carta)
 
-        const result = sut.execute({ jogadorIndex: 0 })
+        const result = sut.execute({ jogadorId: '0' })
 
         expect(mockedBaralho.prototype.tirarCarta).toHaveBeenCalledTimes(1)
         expect(mockedJogador.prototype.botarCarta).toHaveBeenNthCalledWith(1, carta)
         expect(result).toEqual([carta])
 
-        expect(mockedPartida.prototype.notifyObservers).toHaveBeenCalledWith({ tipo: 'pescar-padrao', dados: { jogadorIndex: 0, cartas: [carta] } })
+        expect(mockedPartida.prototype.notifyObservers).toHaveBeenCalledWith({ tipo: 'pescar-padrao', dados: { jogadorId: '0', cartas: [carta] } })
 
     })
 
@@ -114,16 +122,18 @@ describe("Pescar Padrão (Action)", () => {
             naipe: Naipe.Copas,
             numero: NumeroCarta.Quatro
         }
+        mockedPartida.prototype.getJogadorById.mockReturnValue(new Jogador(null))
+        mockedJogador.prototype.getId.mockReturnValue('c0')
         mockedBaralho.prototype.tirarCarta.mockReturnValueOnce(carta0).mockReturnValueOnce(carta1)
 
-        const result = sut.execute({ jogadorIndex: 0, qtd: 2 })
+        const result = sut.execute({ jogadorId: '0', qtd: 2 })
 
         expect(mockedBaralho.prototype.tirarCarta).toHaveBeenCalledTimes(2)
         expect(mockedJogador.prototype.botarCarta).toHaveBeenNthCalledWith(1, carta0)
         expect(mockedJogador.prototype.botarCarta).toHaveBeenNthCalledWith(2, carta1)
         expect(result).toEqual([carta0, carta1])
 
-        expect(mockedPartida.prototype.notifyObservers).toHaveBeenCalledWith({ tipo: 'pescar-padrao', dados: { jogadorIndex: 0, cartas: [carta0, carta1] } })
+        expect(mockedPartida.prototype.notifyObservers).toHaveBeenCalledWith({ tipo: 'pescar-padrao', dados: { jogadorId: '0', cartas: [carta0, carta1] } })
 
     })
 
@@ -133,9 +143,11 @@ describe("Pescar Padrão (Action)", () => {
             naipe: Naipe.Espadas,
             numero: NumeroCarta.As
         }
+        mockedPartida.prototype.getJogadorById.mockReturnValue(new Jogador(null))
+        mockedJogador.prototype.getId.mockReturnValue('c0')
         mockedBaralho.prototype.tirarCarta.mockReturnValueOnce(carta)
 
-        const result = sut.execute({ jogadorIndex: 0 })
+        const result = sut.execute({ jogadorId: '0' })
 
         expect(mockedPartida.prototype.nextPlayer).toHaveBeenCalledTimes(0)
         // expect(mockedBaralho.prototype.tirarCarta).toHaveBeenCalledTimes(1)
@@ -149,10 +161,12 @@ describe("Pescar Padrão (Action)", () => {
             naipe: Naipe.Espadas,
             numero: NumeroCarta.As
         }
+        mockedPartida.prototype.getJogadorById.mockReturnValue(new Jogador(null))
+        mockedJogador.prototype.getId.mockReturnValue('c0')
         mockedBaralho.prototype.tirarCarta.mockReturnValueOnce(carta)
         mockedPartida.prototype.checkEnd.mockReturnValueOnce(true)
 
-        const result = sut.execute({ jogadorIndex: 0 })
+        const result = sut.execute({ jogadorId: '0' })
 
         expect(mockedPartida.prototype.checkEnd).toHaveBeenCalled()
         expect(mockedPartida.prototype.refillBaralho).toHaveBeenCalledTimes(0)
@@ -167,10 +181,12 @@ describe("Pescar Padrão (Action)", () => {
             naipe: Naipe.Espadas,
             numero: NumeroCarta.As
         }
+        mockedPartida.prototype.getJogadorById.mockReturnValue(new Jogador(null))
+        mockedJogador.prototype.getId.mockReturnValue('c0')
         mockedBaralho.prototype.tirarCarta.mockReturnValueOnce(carta)
         mockedPartida.prototype.checkEnd.mockReturnValueOnce(false)
 
-        const result = sut.execute({ jogadorIndex: 0 })
+        const result = sut.execute({ jogadorId: '0' })
 
         expect(mockedPartida.prototype.checkEnd).toHaveBeenCalled()
         expect(mockedPartida.prototype.refillBaralho).toHaveBeenCalledTimes(1)

@@ -4,7 +4,7 @@ import { StatusPartida } from "../entities/status-partida";
 import { Carta } from "../entities/carta";
 
 export type PescarPadraoConfig = {
-    jogadorIndex: number,
+    jogadorId: string,
     qtd?: number,
 }
 
@@ -18,10 +18,16 @@ export class PescarPadraoAction implements Action {
         this.context = context
     }
 
-    public execute({ jogadorIndex, qtd = 1 }: PescarPadraoConfig): Carta[] {
+    public execute({ jogadorId, qtd = 1 }: PescarPadraoConfig): Carta[] {
         if(this.context.status !== StatusPartida.EM_ANDAMENTO) { throw new Error('A partida não está em andamento') }
         
-        if(jogadorIndex !== this.context.currentJogador) { throw new Error('Não é a vez do jogador!') }
+        const jogador = this.context.getJogadorById(jogadorId)
+        if(!jogador) {
+            throw new Error('Não é a vez do jogador!') 
+        }
+        if(jogador.getId() !== this.context.getJogadores()[this.context.currentJogador].getId()) { 
+            throw new Error('Não é a vez do jogador!') 
+        }
 
         if (this.context.getBaralho().size() < qtd) { 
             this.context.refillBaralho()
@@ -33,11 +39,11 @@ export class PescarPadraoAction implements Action {
         const cartas: Carta[] = []
         for(let i = 0; i < qtd; i++) {
             const carta = this.context.getBaralho().tirarCarta()
-            this.context.getJogadores()[jogadorIndex].botarCarta(carta)
+            jogador.botarCarta(carta)
             cartas.push(carta)
         }
         
-        this.context.notifyObservers({ tipo: 'pescar-padrao', dados: { jogadorIndex, cartas } })
+        this.context.notifyObservers({ tipo: 'pescar-padrao', dados: { jogadorId, cartas } })
         
         if(!this.context.checkEnd()) {
             if (this.context.getBaralho().size() < qtd) { 
