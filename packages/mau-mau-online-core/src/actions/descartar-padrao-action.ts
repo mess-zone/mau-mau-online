@@ -4,7 +4,7 @@ import { Partida } from "../entities/partida";
 import { StatusPartida } from "../entities/status-partida";
 
 export type DescartarPadraoConfig = {
-    jogadorIndex: number,
+    jogadorId: string,
     cartasId: string[],
 }
 
@@ -20,13 +20,19 @@ export class DescartarPadraoAction implements Action {
 
     // TODO faz sentido retornar a lista de cartas descartadas?
     // TODO devem haver variações dos movimentos (de penalidades dos jogador corrente), seguir o principio Open Closed, e englobar as cartas especiais
-    public execute({ jogadorIndex, cartasId }: DescartarPadraoConfig): Carta[] {
+    public execute({ jogadorId, cartasId }: DescartarPadraoConfig): Carta[] {
         if(this.context.status !== StatusPartida.EM_ANDAMENTO) { throw new Error('A partida não está em andamento') }
 
-        if(jogadorIndex !== this.context.currentJogador) { throw new Error('Não é a vez do jogador!') }
+        const jogador = this.context.getJogadorById(jogadorId)
+        if(!jogador) {
+            throw new Error('Não é a vez do jogador!') 
+        }
+        if(jogador.getId() !== this.context.getJogadores()[this.context.currentJogador].getId()) { 
+            throw new Error('Não é a vez do jogador!') 
+        }
 
         const cartas: Carta[] = cartasId
-            .map(cartaId => this.context.getJogadores()[jogadorIndex].getCartaById(cartaId))
+            .map(cartaId => jogador.getCartaById(cartaId))
             .filter(carta => carta !== null && carta !== undefined)
         
         if(cartas.length > 1) {
@@ -44,13 +50,13 @@ export class DescartarPadraoAction implements Action {
 
         const cartasDescartadas: Carta[] = []
         for(let i = 0; i < cartas.length; i++) {
-            const carta = this.context.getJogadores()[jogadorIndex].tirarCarta(cartas[i])
+            const carta = jogador.tirarCarta(cartas[i])
             this.context.getPilhaDeDescarte().botarCarta(carta)
             cartasDescartadas.push(carta)
         }
 
         if(cartasDescartadas.length > 0) {
-            this.context.notifyObservers({ tipo: 'descartar-padrao', dados: { jogadorIndex, cartas: cartasDescartadas } })
+            this.context.notifyObservers({ tipo: 'descartar-padrao', dados: { jogadorId, cartas: cartasDescartadas } })
     
             if(!this.context.checkEnd()) {
                 this.context.nextPlayer()
