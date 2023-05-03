@@ -15,7 +15,7 @@ describe("Jogador entity", () => {
     beforeEach(() => {
         jest.clearAllMocks()
         list = new ArrayList<Carta>()
-        sut = new Jogador('valid-id', list)
+        sut = new Jogador({ id: 'valid-id', cartas: list } )
     });
 
     test("deve iniciar vazio de cartas", () => {

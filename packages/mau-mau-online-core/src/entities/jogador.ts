@@ -1,6 +1,10 @@
 import { Carta } from "../entities/carta"
 import { ArrayList } from "../entities/array-list"
 
+type JogadorConfig = {
+    id: string, 
+    cartas: ArrayList<Carta>,
+}
 /**
  * Representa as cartas na mão de um jogador
  */
@@ -9,9 +13,9 @@ export class Jogador {
     private active: boolean = true
     private list: ArrayList<Carta>
 
-    constructor(id: string, list: ArrayList<Carta>) {
+    constructor({ id, cartas }: JogadorConfig) {
         this.id = id
-        this.list = list
+        this.list = cartas
     }
 
     public getId() {
