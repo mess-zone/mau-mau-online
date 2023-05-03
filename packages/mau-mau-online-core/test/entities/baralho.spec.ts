@@ -3,9 +3,12 @@ import { Carta } from "@/entities/carta";
 import { Naipe } from "@/entities/naipe";
 import { NumeroCarta, NumeroCartaStrings } from "@/entities/numero-carta";
 import { Stack } from "@/entities/stack";
+// import { shuffleArray } from "@/utils";
 
 jest.mock('../../src/entities/stack');
 let mockedStack = jest.mocked(Stack);
+// jest.mock('../../src/utils/shuffle-array');
+// let mockedShuffle = jest.mocked(shuffleArray);
 
 describe("Baralho entity", () => {
     let stack: Stack<Carta>;
@@ -73,6 +76,26 @@ describe("Baralho entity", () => {
             ).toHaveLength(1);
         }
     });
+
+    test('deve limpar a pilha e fazer push novas cartas no baralho', () => {
+        const cartas: Carta[] = [
+            {
+                id: 'carta0',
+                naipe: Naipe.Espadas,
+                numero: NumeroCarta.As,
+            },
+            {
+                id: 'carta1',
+                naipe: Naipe.Ouros,
+                numero: NumeroCarta.Quatro,
+            },
+        ]
+
+        sut.refill(cartas)
+
+        expect(mockedStack.prototype.clear).toBeCalled()
+        expect(mockedStack.prototype.push).toBeCalledTimes(52 + cartas.length)
+    })
 
     test("deve retirar uma carta do topo do monte", () => {
         const cartaTopo: Carta = {
