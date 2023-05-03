@@ -27,17 +27,18 @@ export class PescarPadraoAction implements Action {
             // throw new Error('Não há cartas suficientes disponíveis no baralho!') 
             this.context.refillBaralho()
         } // TODO e se ainda assim não tiver cartas suficientes, deveria dar um erro!
-
+        
         const cartas: Carta[] = []
         for(let i = 0; i < qtd; i++) {
             const carta = this.context.getBaralho().tirarCarta()
             this.context.getJogadores()[jogadorIndex].botarCarta(carta)
             cartas.push(carta)
         }
-
+        
         this.context.notifyObservers({ tipo: 'pescar-padrao', dados: { jogadorIndex, cartas } })
-
+        
         this.context.checkEnd()
+        // TODO também existe a possibilidade do baralho ficar vazio depois de pescar e ser necessário fazer refil (se não houver ganhador?)! A verificação se está vazio deveria estar aqui no final também... Dãããã
         return cartas
     }
 }
