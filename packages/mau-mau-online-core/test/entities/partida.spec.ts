@@ -1,3 +1,4 @@
+import { Carta } from "@/entities";
 import { Baralho } from "@/entities/baralho";
 import { Jogador } from "@/entities/jogador";
 import { Naipe } from "@/entities/naipe";
@@ -36,6 +37,28 @@ describe("Partida entity", () => {
         notifyObservers = jest.fn();
         sut.notifyObservers = notifyObservers; 
     });
+
+    test('deve preencher o baralho novamente com as cartas da pilha de descarte embaralhadas', () => {
+        const cartas: Carta[] = [
+            {
+                id: 'carta0',
+                naipe: Naipe.Copas,
+                numero: NumeroCarta.Cinco,
+            },
+            {
+                id: 'carta1',
+                naipe: Naipe.Espadas,
+                numero: NumeroCarta.Dez,
+            },
+        ]
+        mockedPilhaDeDescarte.prototype.clear.mockReturnValueOnce(cartas)
+
+        sut.refillBaralho()
+
+        expect(mockedPilhaDeDescarte.prototype.clear).toBeCalled()
+        expect(mockedBaralho.prototype.refill).toBeCalledWith(cartas)
+        expect(notifyObservers).toHaveBeenCalledWith({ tipo: 'refill', dados: { cartas } })
+    })
 
     test('não deve iniciar partida se não estiver pendente', () => {
         sut.cancel()

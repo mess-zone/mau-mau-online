@@ -59,6 +59,13 @@ export class Partida extends Subject {
         }
     }
 
+    public refillBaralho() {
+        const cartas = this.getPilhaDeDescarte().clear()
+        this.getBaralho().refill(cartas)
+
+        this.notifyObservers({ tipo: 'refill', dados: { cartas } })
+    }
+
     public start() {
         if(this.status != StatusPartida.PENDENTE) { return false }
 
