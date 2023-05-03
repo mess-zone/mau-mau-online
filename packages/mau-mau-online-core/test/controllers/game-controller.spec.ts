@@ -49,7 +49,7 @@ describe("Game Controller", () => {
             naipe: Naipe.Espadas,
             numero: NumeroCarta.As
         }
-        sut.execute('descartar-padrao', { jogadorIndex: 0, cartas: [carta] })
-        expect(descartarPadraoAction.prototype.execute).toHaveBeenCalledWith({ jogadorIndex: 0, cartas: [carta] })
+        sut.execute('descartar-padrao', { jogadorIndex: 0, cartasId: [carta.id] })
+        expect(descartarPadraoAction.prototype.execute).toHaveBeenCalledWith({ jogadorIndex: 0, cartasId: [carta.id] })
     })
 })

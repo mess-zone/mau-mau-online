@@ -2,12 +2,11 @@ import { CancelarPartidaAction } from "../actions/cancelar-partida-action"
 import { DescartarPadraoAction } from "../actions/descartar-padrao-action"
 import { IniciarPartidaAction } from "../actions/iniciar-partida-action"
 import { PescarPadraoAction } from "../actions/pescar-padrao-action"
-import { Carta } from "../entities/carta"
 import { Partida } from "../entities/partida"
 
 export type CommandOptions = {
     jogadorIndex?: number,
-    cartas?: Carta[],
+    cartasId?: string[],
 }
 
 export class GameController {
@@ -43,7 +42,7 @@ export class GameController {
             'descartar-padrao',
             (partida: Partida, options: CommandOptions) => {
                 const action = new DescartarPadraoAction(partida)
-                action.execute({ jogadorIndex: options.jogadorIndex, cartasId: options.cartas })
+                action.execute({ jogadorIndex: options.jogadorIndex, cartasId: options.cartasId })
             }
         )
     }
