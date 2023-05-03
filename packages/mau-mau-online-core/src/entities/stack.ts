@@ -1,7 +1,6 @@
 export class Stack<T> {
 
-  // TODO deviar ser privado
-    protected items: T[];
+    private items: T[];
   
     constructor() {
       this.items = [];
@@ -25,5 +24,11 @@ export class Stack<T> {
   
     size(): number {
       return this.items.length;
+    }
+
+    clear(): T[] {
+      const copy = [...this.items]
+      this.items = []
+      return copy
     }
 }

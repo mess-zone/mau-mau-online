@@ -52,4 +52,17 @@ describe('Stack entity', () => {
       expect(stack.size()).toBe(0);
     });
 
+    it('should empty the stack and return deleted items', () => {
+      stack.push(1);
+      stack.push(2);
+      stack.push(3);
+  
+      const poppedItems = stack.clear();
+  
+      expect(poppedItems).toEqual([1,2,3])
+      expect(stack.isEmpty()).toBe(true);
+      expect(stack.size()).toBe(0);
+      expect(stack.peek()).toBeUndefined();
+    });
+
   });

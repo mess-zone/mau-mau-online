@@ -23,6 +23,7 @@ export class Baralho {
         }
 
         this.stack = stack
+        // TODO clear stack and refill
         for(const carta of shuffleArray(cartas)) {
             this.stack.push(carta)
         }
