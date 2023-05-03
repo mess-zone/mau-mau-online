@@ -117,6 +117,8 @@ describe("Partida entity", () => {
 
         sut.cancel()
         expect(sut.status).toBe(StatusPartida.CANCELADA) 
+        expect(notifyObservers).toHaveBeenCalledWith({ tipo: 'cancel', dados: {} })
+
     })
 
     test('deve passar a vez para o próximo jogador', () => {
@@ -128,6 +130,12 @@ describe("Partida entity", () => {
         expect(sut.currentJogador).toBe(2)
         sut.nextPlayer()
         expect(sut.currentJogador).toBe(0)
+        
+        expect(notifyObservers).toHaveBeenNthCalledWith(2, { tipo: 'next-player', dados: { jogadorIndex: 0 } })
+        expect(notifyObservers).toHaveBeenNthCalledWith(3, { tipo: 'next-player', dados: { jogadorIndex: 1 } })
+        expect(notifyObservers).toHaveBeenNthCalledWith(4, { tipo: 'next-player', dados: { jogadorIndex: 2 } })
+        expect(notifyObservers).toHaveBeenNthCalledWith(5, { tipo: 'next-player', dados: { jogadorIndex: 0 } })
+
     })
 
     test('não deve finalizar a partida quando os jogadores ainda tem cartas na mão', () => {
@@ -155,7 +163,7 @@ describe("Partida entity", () => {
 
         expect(sut.status).toBe(StatusPartida.FINALIZADA)
         expect(isEnded).toBe(true)
-
+        expect(notifyObservers).toHaveBeenCalledWith({ tipo: 'finalized', dados: { } })
     })
 
     test('deve finalizar a partida quando o baralho não tiver mais cartas', () => {
@@ -169,6 +177,7 @@ describe("Partida entity", () => {
 
         expect(sut.status).toBe(StatusPartida.FINALIZADA)
         expect(isEnded).toBe(true)
+        expect(notifyObservers).toHaveBeenCalledWith({ tipo: 'finalized', dados: { } })
     })
 
     test('não deve finalizar a partida enquanto o baralho ainda tiver cartas', () => {

@@ -1,3 +1,4 @@
+import { Evento, Observer, Subject } from '@mess-zone/mau-mau-online-core/src/entities/observer'
 import './style.css'
 import typescriptLogo from './typescript.svg'
 import viteLogo from '/vite.svg'
@@ -96,17 +97,33 @@ game = new GameController(partida)
 window.__game = game
 console.log(game)
 
+class ConcreteObserver implements Observer {
+  constructor(private subject: Subject) {
+    this.subject.addObserver(this);
+  }
+
+  public update(evento: Evento): void {
+    console.log(`[${evento.tipo}]`, evento.dados);
+    updateScreen()
+  }
+
+  public unsubscribe(): void {
+    this.subject.removeObserver(this);
+  }
+}
+
+const observer = new ConcreteObserver(partida)
+
+
 updateScreen()
 
 btnStart.addEventListener('click', () => {
   game.execute('start')
-  updateScreen()
 })
 
 
 btnCancel.addEventListener('click', () => {
   game.execute('cancel')
-  updateScreen()
 })
 
 

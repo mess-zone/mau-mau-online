@@ -66,23 +66,27 @@ export class Partida extends Subject {
 
         this._status = StatusPartida.EM_ANDAMENTO
         this.distribuirCartas()
-        this.nextPlayer()
-
         this.notifyObservers({ tipo: 'start', dados: {} })
+
+        this.nextPlayer()
         return true
     }
 
     public cancel() {
         this._status = StatusPartida.CANCELADA
+        this.notifyObservers({ tipo: 'cancel', dados: {} })
     }
 
     public nextPlayer() {
         this._currentJogador = (this._currentJogador + 1) % this.getJogadores().length
+        this.notifyObservers({ tipo: 'next-player', dados: { jogadorIndex: this._currentJogador } })
     }
 
     public checkEnd() {
         if(this.getJogadores()[this._currentJogador].size() == 0 || this.getBaralho().size() == 0) {
             this._status = StatusPartida.FINALIZADA
+            this.notifyObservers({ tipo: 'finalized', dados: { } })
+
             return true
         }
 
