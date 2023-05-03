@@ -2,6 +2,7 @@ import { Baralho } from "../entities/baralho";
 import { PilhaDeDescarte } from "../entities/pilha-de-descarte";
 import { Jogador } from "../entities/jogador";
 import { StatusPartida } from "../entities/status-partida";
+import { Subject } from "../entities/observer";
 
 export type PartidaOptions = { 
     baralho: Baralho,
@@ -9,7 +10,7 @@ export type PartidaOptions = {
     jogadores: Jogador[],
 }
 
-export class Partida {
+export class Partida extends Subject {
     private readonly _baralho: Baralho
     private readonly _pilhaDeDescarte: PilhaDeDescarte
     private readonly _jogadores: Jogador[]
@@ -19,6 +20,7 @@ export class Partida {
     private _cartasPorJogador: number = 7
 
     constructor({ baralho, pilhaDeDescarte, jogadores }: PartidaOptions) {
+        super()
         this._baralho = baralho
         this._pilhaDeDescarte = pilhaDeDescarte
         this._jogadores = jogadores
@@ -65,6 +67,8 @@ export class Partida {
         this._status = StatusPartida.EM_ANDAMENTO
         this.distribuirCartas()
         this.nextPlayer()
+
+        this.notifyObservers({ tipo: 'start', dados: {} })
         return true
     }
 

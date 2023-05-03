@@ -21,6 +21,7 @@ describe("Partida entity", () => {
     let jogador3: Jogador
 
     let sut: Partida
+    let notifyObservers: jest.Mock
 
     beforeEach(() => {
         jest.clearAllMocks()
@@ -32,6 +33,8 @@ describe("Partida entity", () => {
         jogador3 = new Jogador(null)
 
         sut = new Partida({ baralho, pilhaDeDescarte, jogadores: [ jogador1, jogador2, jogador3 ] })
+        notifyObservers = jest.fn();
+        sut.notifyObservers = notifyObservers; 
     });
 
     test('não deve iniciar partida se não estiver pendente', () => {
@@ -68,6 +71,7 @@ describe("Partida entity", () => {
         expect(mockedJogador.mock.instances[2].botarCarta).toHaveBeenCalledTimes(7)
         // expect(mockedJogador.prototype.botarCarta).toHaveBeenCalledWith(carta)
         expect(mockedPilhaDeDescarte.prototype.botarCarta).toHaveBeenCalledTimes(0)
+        expect(notifyObservers).toHaveBeenCalledWith({ tipo: 'start', dados: {} })
     })
 
     test('deve iniciar partida se houver ao menos 2 jogadores', () => {
