@@ -44,7 +44,7 @@ describe("Pilha de Descarte entity", () => {
         expect(mockedStack.prototype.push).toHaveBeenCalledWith(carta)
     })
 
-    test("deve limpar a pilha e retornar as cartas retiradas", () => {
+    test("deve limpar a pilha e retornar as cartas retiradas, mantendo apenas a última carta no topo da pilha, se houver", () => {
         const cartas: Carta[] = [
             {
                 id: 'id0',
@@ -52,16 +52,54 @@ describe("Pilha de Descarte entity", () => {
                 numero: NumeroCarta.As
             },
             {
+                id: 'id1',
+                naipe: Naipe.Copas,
+                numero: NumeroCarta.Quatro
+            },
+            {
                 id: 'id2',
+                naipe: Naipe.Ouros,
+                numero: NumeroCarta.Rainha
+            },
+        ]
+        mockedStack.prototype.pop.mockReturnValue(cartas[2])
+        mockedStack.prototype.clear.mockReturnValue([cartas[0], cartas[1]])
+
+        const cleared = sut.clear()
+        expect(mockedStack.prototype.pop).toHaveBeenCalled()
+        expect(mockedStack.prototype.clear).toHaveBeenCalled()
+        expect(mockedStack.prototype.push).toHaveBeenCalledWith(cartas[2])
+        expect(cleared).toEqual([cartas[0], cartas[1]])
+    })
+
+    test("deve limpar a pilha e retornar um array vazio, se houver apenas 1 carta na pilha", () => {
+        const cartas: Carta[] = [
+            {
+                id: 'id0',
                 naipe: Naipe.Espadas,
                 numero: NumeroCarta.As
             },
         ]
-        mockedStack.prototype.clear.mockReturnValue(cartas)
+        mockedStack.prototype.pop.mockReturnValue(cartas[0])
+        mockedStack.prototype.clear.mockReturnValue([])
 
         const cleared = sut.clear()
-        expect(mockedStack.prototype.clear).toHaveBeenCalledWith()
-        expect(cleared).toEqual(cartas)
+        expect(mockedStack.prototype.pop).toHaveBeenCalled()
+        expect(mockedStack.prototype.clear).toHaveBeenCalled()
+        expect(mockedStack.prototype.push).toHaveBeenCalledWith(cartas[0])
+        expect(cleared).toEqual([])
+    })
+
+    test("deve limpar a pilha e retornar um array vazio, se houver não houver cartas na pilha", () => {
+        const cartas: Carta[] = []
+        mockedStack.prototype.pop.mockReturnValue(undefined)
+        mockedStack.prototype.clear.mockReturnValue([])
+
+        const cleared = sut.clear()
+        expect(mockedStack.prototype.pop).toHaveBeenCalled()
+        expect(mockedStack.prototype.clear).toHaveBeenCalled()
+        expect(mockedStack.prototype.push).toHaveBeenCalledTimes(0)
+        expect(cleared).toEqual([])
     })
 
 })

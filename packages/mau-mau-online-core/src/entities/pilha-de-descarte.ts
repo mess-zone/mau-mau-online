@@ -24,6 +24,12 @@ export class PilhaDeDescarte {
     }
 
     public clear() {
-        return this.stack.clear()
+        const topo = this.stack.pop()
+        const cartas = this.stack.clear()
+
+        if(topo) {
+            this.stack.push(topo)
+        }
+        return cartas
     }
 }
