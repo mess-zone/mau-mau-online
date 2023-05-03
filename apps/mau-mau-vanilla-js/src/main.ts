@@ -66,15 +66,15 @@ const preJogador0 = document.querySelector<HTMLButtonElement>('#jog0')
 const preJogador1 = document.querySelector<HTMLButtonElement>('#jog1')
 
 
-let baralhoStack = new Stack<Carta>()
-let baralho = new Baralho(baralhoStack)
-let descarteStack = new Stack<Carta>()
-let pilhaDeDescarte = new PilhaDeDescarte(descarteStack)
+let baralhoStack: Stack<Carta>
+let baralho: Baralho
+let descarteStack: Stack<Carta>
+let pilhaDeDescarte: PilhaDeDescarte
 
-let jog0List = new ArrayList<Carta>()
-let jogador0 = new Jogador(jog0List)
-let jog1List = new ArrayList<Carta>()
-let jogador1 = new Jogador(jog1List)
+let jog0List: ArrayList<Carta>
+let jogador0: Jogador
+let jog1List: ArrayList<Carta>
+let jogador1: Jogador
 
 let partida: Partida
 let game: GameController
@@ -86,9 +86,11 @@ descarteStack = new Stack<Carta>()
 pilhaDeDescarte = new PilhaDeDescarte(descarteStack)
 
 jog0List = new ArrayList<Carta>()
-jogador0 = new Jogador(jog0List)
+jogador0 = new Jogador({ id: 'jog0', cartas: jog0List })
+
 jog1List = new ArrayList<Carta>()
-jogador1 = new Jogador(jog1List)
+jogador1 = new Jogador({ id: 'jog1', cartas: jog1List })
+
 
 partida = new Partida({ baralho, pilhaDeDescarte, jogadores: [jogador0, jogador1]})
 game = new GameController(partida)
@@ -157,7 +159,7 @@ function renderCartas(jogadorIndex: number, list: Carta[], listContainer: HTMLEl
     const btnDescartar = document.createElement('button')
     btnDescartar.innerText = 'descartar'
     btnDescartar.addEventListener('click', () => {
-      game.execute('descartar-padrao', { jogadorIndex, cartas:[carta] })
+      game.execute('descartar-padrao', { jogadorIndex, cartasId: [carta.id] })
     })
 
     cartaEl.appendChild(btnDescartar)
