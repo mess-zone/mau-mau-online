@@ -44,4 +44,24 @@ describe("Pilha de Descarte entity", () => {
         expect(mockedStack.prototype.push).toHaveBeenCalledWith(carta)
     })
 
+    test("deve limpar a pilha e retornar as cartas retiradas", () => {
+        const cartas: Carta[] = [
+            {
+                id: 'id0',
+                naipe: Naipe.Espadas,
+                numero: NumeroCarta.As
+            },
+            {
+                id: 'id2',
+                naipe: Naipe.Espadas,
+                numero: NumeroCarta.As
+            },
+        ]
+        mockedStack.prototype.clear.mockReturnValue(cartas)
+
+        const cleared = sut.clear()
+        expect(mockedStack.prototype.clear).toHaveBeenCalledWith()
+        expect(cleared).toEqual(cartas)
+    })
+
 })

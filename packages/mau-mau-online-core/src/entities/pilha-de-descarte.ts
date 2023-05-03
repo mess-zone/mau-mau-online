@@ -23,5 +23,7 @@ export class PilhaDeDescarte {
         return this.stack.peek()
     }
 
-    // TODO clear stack (return copy) and empty
+    public clear() {
+        return this.stack.clear()
+    }
 }
