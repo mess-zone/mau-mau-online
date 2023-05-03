@@ -129,11 +129,11 @@ btnCancel.addEventListener('click', () => {
 })
 
 btnPescar0.addEventListener('click', () => {
-  game.execute('pescar-padrao', { jogadorIndex: 0 })
+  game.execute('pescar-padrao', { jogadorId: 'jog0' })
 })
 
 btnPescar1.addEventListener('click', () => {
-  game.execute('pescar-padrao', { jogadorIndex: 1 })
+  game.execute('pescar-padrao', { jogadorId: 'jog1' })
 })
 
 function updateScreen() {
@@ -145,11 +145,11 @@ function updateScreen() {
   preBaralho.innerHTML = JSON.stringify(baralho, null, ' ')
   preDescarte.innerHTML = `<div>size: ${pilhaDeDescarte.size()}</div> <div>topo: ${JSON.stringify(pilhaDeDescarte.peek(), null, ' ') }</div><hr/>` + JSON.stringify(pilhaDeDescarte, null, ' ')
 
-  renderCartas(0, [...jogador0.iterator()], preJogador0)
-  renderCartas(1, [...jogador1.iterator()], preJogador1)
+  renderCartas(jogador0.getId() , [...jogador0.iterator()], preJogador0)
+  renderCartas(jogador1.getId(), [...jogador1.iterator()], preJogador1)
 }
 
-function renderCartas(jogadorIndex: number, list: Carta[], listContainer: HTMLElement) {
+function renderCartas(jogadorId: string, list: Carta[], listContainer: HTMLElement) {
   listContainer.innerHTML = ''
   for(const carta of list) {
     const cartaEl = document.createElement('div')
@@ -159,7 +159,7 @@ function renderCartas(jogadorIndex: number, list: Carta[], listContainer: HTMLEl
     const btnDescartar = document.createElement('button')
     btnDescartar.innerText = 'descartar'
     btnDescartar.addEventListener('click', () => {
-      game.execute('descartar-padrao', { jogadorIndex, cartasId: [carta.id] })
+      game.execute('descartar-padrao', { jogadorId, cartasId: [carta.id] })
     })
 
     cartaEl.appendChild(btnDescartar)
