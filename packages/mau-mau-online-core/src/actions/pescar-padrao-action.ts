@@ -23,7 +23,10 @@ export class PescarPadraoAction implements Action {
         
         if(jogadorIndex !== this.context.currentJogador) { throw new Error('Não é a vez do jogador!') }
 
-        if (this.context.getBaralho().size() < qtd ) { throw new Error('Não há cartas suficientes disponíveis no baralho!') }
+        if (this.context.getBaralho().size() < qtd ) { 
+            // throw new Error('Não há cartas suficientes disponíveis no baralho!') 
+            this.context.refillBaralho()
+        } // TODO e se ainda assim não tiver cartas suficientes, deveria dar um erro!
 
         const cartas: Carta[] = []
         for(let i = 0; i < qtd; i++) {

@@ -57,10 +57,25 @@ describe("Pescar Padrão (Action)", () => {
         expect(() => {  sut.execute({ jogadorIndex: 0 }) }).toThrowError('Não é a vez do jogador')
     })
 
-    test('um jogador não pode pescar cartas do baralho, se não houver cartas suficientes no baralho', () => {
-        mockedBaralho.prototype.size.mockReturnValueOnce(2)
+    test('se não houver cartas suficientes no baralho, deve trazer as cartas da pilha de descarte embaralhadas', () => {
+        mockedBaralho.prototype.size.mockReturnValueOnce(1)
 
-        expect(() => {  sut.execute({ jogadorIndex: 0, qtd: 4 }) }).toThrowError('Não há cartas suficientes disponíveis no baralho!')
+        const carta = {
+            id: "c0",
+            naipe: Naipe.Espadas,
+            numero: NumeroCarta.As
+        }
+        mockedBaralho.prototype.tirarCarta.mockReturnValue(carta)
+
+        const result = sut.execute({ jogadorIndex: 0, qtd: 2 })
+
+        expect(mockedPartida.prototype.refillBaralho).toHaveBeenCalledTimes(1)
+        expect(mockedBaralho.prototype.tirarCarta).toHaveBeenCalledTimes(2)
+        expect(mockedJogador.prototype.botarCarta).toHaveBeenCalledTimes(2)
+        expect(result).toEqual([carta, carta])
+
+        // expect(mockedPartida.prototype.notifyObservers).toHaveBeenCalledWith({ tipo: 'refill', dados: { cartas: [carta, carta] } })
+        expect(mockedPartida.prototype.notifyObservers).toHaveBeenCalledWith({ tipo: 'pescar-padrao', dados: { jogadorIndex: 0, cartas: [carta, carta] } })
 
     })
 
