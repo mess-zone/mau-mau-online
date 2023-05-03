@@ -79,6 +79,12 @@ describe("Pescar Padrão (Action)", () => {
 
     })
 
+    test('se após trazer cartas da pilha de descarte, ainda não houver cartas suficientes para pescar do baralho, deve retornar um erro', () => {
+        mockedBaralho.prototype.size.mockReturnValueOnce(0).mockReturnValueOnce(1)
+
+        expect(() => { sut.execute({ jogadorIndex: 0, qtd: 2 }) }).toThrowError('Não há cartas suficientes disponíveis no baralho!')
+    })
+
     test('um jogador pode pescar uma única carta do baralho', () => {
         const carta = {
             id: "c0",
@@ -149,9 +155,25 @@ describe("Pescar Padrão (Action)", () => {
         const result = sut.execute({ jogadorIndex: 0 })
 
         expect(mockedPartida.prototype.checkEnd).toHaveBeenCalled()
-        expect(mockedPartida.prototype.nextPlayer).toHaveBeenCalledTimes(0)
-        // expect(mockedBaralho.prototype.tirarCarta).toHaveBeenCalledTimes(1)
-        // expect(mockedJogador.prototype.botarCarta).toHaveBeenNthCalledWith(1, carta)
-        // expect(result).toEqual([carta])
+        expect(mockedPartida.prototype.refillBaralho).toHaveBeenCalledTimes(0)
+
+    })
+
+    test('após pescar cartas, se a partida não acabou, mas acabaram as cartas no baralho, deve trazer as cartas da pilha de descarte embaralhadas', () => {
+        mockedBaralho.prototype.size.mockReturnValueOnce(1).mockReturnValueOnce(0)
+        
+        const carta = {
+            id: "c0",
+            naipe: Naipe.Espadas,
+            numero: NumeroCarta.As
+        }
+        mockedBaralho.prototype.tirarCarta.mockReturnValueOnce(carta)
+        mockedPartida.prototype.checkEnd.mockReturnValueOnce(false)
+
+        const result = sut.execute({ jogadorIndex: 0 })
+
+        expect(mockedPartida.prototype.checkEnd).toHaveBeenCalled()
+        expect(mockedPartida.prototype.refillBaralho).toHaveBeenCalledTimes(1)
+
     })
 })
