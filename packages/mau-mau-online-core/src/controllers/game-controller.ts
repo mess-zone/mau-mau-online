@@ -5,7 +5,7 @@ import { PescarPadraoAction } from "../actions/pescar-padrao-action"
 import { Partida } from "../entities/partida"
 
 export type CommandOptions = {
-    jogadorIndex?: number,
+    jogadorId?: string,
     cartasId?: string[],
 }
 
@@ -35,14 +35,14 @@ export class GameController {
             'pescar-padrao',
             (partida: Partida, options: CommandOptions) => {
                 const action = new PescarPadraoAction(partida)
-                action.execute({ jogadorId: options.jogadorIndex })
+                action.execute({ jogadorId: options.jogadorId })
             }
         )
         this.commandMap.set(
             'descartar-padrao',
             (partida: Partida, options: CommandOptions) => {
                 const action = new DescartarPadraoAction(partida)
-                action.execute({ jogadorIndex: options.jogadorIndex, cartasId: options.cartasId })
+                action.execute({ jogadorId: options.jogadorId, cartasId: options.cartasId })
             }
         )
     }

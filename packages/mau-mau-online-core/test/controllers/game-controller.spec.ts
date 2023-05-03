@@ -39,8 +39,8 @@ describe("Game Controller", () => {
     })
     
     test("jogador 0 deve pescar uma carta", () => {
-        sut.execute('pescar-padrao', { jogadorIndex: 0 })
-        expect(pescarPadraoAction.prototype.execute).toHaveBeenCalledWith({ jogadorIndex: 0 })
+        sut.execute('pescar-padrao', { jogadorId: '0' })
+        expect(pescarPadraoAction.prototype.execute).toHaveBeenCalledWith({ jogadorId: '0' })
     })
     
     test("jogador 0 deve descartar uma carta", () => {
@@ -49,7 +49,7 @@ describe("Game Controller", () => {
             naipe: Naipe.Espadas,
             numero: NumeroCarta.As
         }
-        sut.execute('descartar-padrao', { jogadorIndex: 0, cartasId: [carta.id] })
-        expect(descartarPadraoAction.prototype.execute).toHaveBeenCalledWith({ jogadorIndex: 0, cartasId: [carta.id] })
+        sut.execute('descartar-padrao', { jogadorId: '0', cartasId: [carta.id] })
+        expect(descartarPadraoAction.prototype.execute).toHaveBeenCalledWith({ jogadorId: '0', cartasId: [carta.id] })
     })
 })
