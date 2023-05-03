@@ -44,9 +44,14 @@ export class Partida extends Subject {
         return this._jogadores
     }
 
+    public getJogadorById(id: string): Jogador {
+        return this.getJogadores().find(jogador => jogador.getId() == id)
+    }
+
     public getPilhaDeDescarte() {
         return this._pilhaDeDescarte
     }
+
 
     // TODO refactor to become a action?
     private distribuirCartas() {

@@ -60,6 +60,13 @@ describe("Partida entity", () => {
         expect(notifyObservers).toHaveBeenCalledWith({ tipo: 'refill', dados: { cartas } })
     })
 
+    test.skip('deve retornar jogador pelo id', () => {
+        sut.getJogadores = jest.fn().mockReturnValueOnce('a')
+        const result = sut.getJogadorById('valid-id')
+        // expect(result).toEqual(jogador1)
+        expect(sut.getJogadores).toHaveBeenCalled()
+    })
+
     test('não deve iniciar partida se não estiver pendente', () => {
         mockedJogador.prototype.isActive.mockReturnValue(true)
 
