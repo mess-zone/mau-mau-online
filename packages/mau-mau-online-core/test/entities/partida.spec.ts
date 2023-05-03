@@ -61,6 +61,8 @@ describe("Partida entity", () => {
     })
 
     test('não deve iniciar partida se não estiver pendente', () => {
+        mockedJogador.prototype.isActive.mockReturnValue(true)
+
         sut.cancel()
 
         expect(sut.status).toBe(StatusPartida.CANCELADA)
@@ -70,6 +72,8 @@ describe("Partida entity", () => {
     })
 
     test('deve iniciar partida se estiver pendente', () => {
+        mockedJogador.prototype.isActive.mockReturnValue(true)
+
         const carta = {
             id: 'carta',
             naipe: Naipe.Copas,
@@ -144,7 +148,9 @@ describe("Partida entity", () => {
 
     })
 
-    test('deve passar a vez para o próximo jogador', () => {
+    test('deve passar a vez para o próximo jogador ativo', () => {
+        mockedJogador.prototype.isActive.mockReturnValue(true)
+
         sut.start()
         expect(sut.currentJogador).toBe(0)
         sut.nextPlayer()
@@ -159,6 +165,38 @@ describe("Partida entity", () => {
         expect(notifyObservers).toHaveBeenNthCalledWith(4, { tipo: 'next-player', dados: { jogadorIndex: 2 } })
         expect(notifyObservers).toHaveBeenNthCalledWith(5, { tipo: 'next-player', dados: { jogadorIndex: 0 } })
 
+    })
+
+    test('deve pular a vez de um jogador inativo', () => {
+        mockedJogador.prototype.isActive.mockReturnValueOnce(true)
+            .mockReturnValueOnce(true).mockReturnValueOnce(false).mockReturnValueOnce(true)
+
+        sut.start()
+        expect(sut.currentJogador).toBe(0)
+        sut.nextPlayer()
+        expect(sut.currentJogador).toBe(1)
+        sut.nextPlayer()
+        expect(sut.currentJogador).toBe(0)
+        
+        expect(mockedJogador.prototype.isActive).toBeCalledTimes(4)
+        expect(notifyObservers).toHaveBeenNthCalledWith(1, { tipo: 'start', dados: { } })
+        expect(notifyObservers).toHaveBeenNthCalledWith(2, { tipo: 'next-player', dados: { jogadorIndex: 0 } })
+        expect(notifyObservers).toHaveBeenNthCalledWith(3, { tipo: 'next-player', dados: { jogadorIndex: 1 } })
+        expect(notifyObservers).toHaveBeenNthCalledWith(4, { tipo: 'next-player', dados: { jogadorIndex: 0 } })
+    })
+
+    test('não deve passar a vez se tiver apenas um jogador ativo ou se todos os jogadores estão inativos', () => {
+        mockedJogador.prototype.isActive.mockReturnValueOnce(true)
+            .mockReturnValueOnce(false).mockReturnValueOnce(false)
+
+        sut.start()
+        expect(sut.currentJogador).toBe(0)
+        sut.nextPlayer()
+        expect(sut.currentJogador).toBe(0)
+        
+        expect(mockedJogador.prototype.isActive).toBeCalledTimes(3)
+        expect(notifyObservers).toHaveBeenNthCalledWith(2, { tipo: 'next-player', dados: { jogadorIndex: 0 } })
+        expect(notifyObservers).toHaveBeenCalledTimes(2)
     })
 
     test('não deve finalizar a partida quando os jogadores ainda tem cartas na mão', () => {

@@ -85,8 +85,16 @@ export class Partida extends Subject {
     }
 
     public nextPlayer() {
-        this._currentJogador = (this._currentJogador + 1) % this.getJogadores().length
-        this.notifyObservers({ tipo: 'next-player', dados: { jogadorIndex: this._currentJogador } })
+        const getNextIndex = (index: number) => (index + 1) % this.getJogadores().length
+
+        for(let i = 0; i < this.getJogadores().length - 1; i++) {
+            let nextJogador = getNextIndex(this._currentJogador + i)
+            if(this.getJogadores()[nextJogador].isActive()) {
+                this._currentJogador = nextJogador
+                this.notifyObservers({ tipo: 'next-player', dados: { jogadorIndex: this._currentJogador } })
+                return 
+            }
+        }
     }
 
     public checkEnd() {
