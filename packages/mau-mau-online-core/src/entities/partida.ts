@@ -92,7 +92,7 @@ export class Partida extends Subject {
     public checkEnd() {
         if(this.getJogadores()[this._currentJogador].size() == 0) {
             this._status = StatusPartida.FINALIZADA
-            this.notifyObservers({ tipo: 'finalized', dados: { } })
+            this.notifyObservers({ tipo: 'finalized', dados: { winner: this._currentJogador } })
 
             return true
         }
