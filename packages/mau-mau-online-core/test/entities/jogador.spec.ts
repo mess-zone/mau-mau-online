@@ -68,6 +68,68 @@ describe("Jogador entity", () => {
         expect(carta).toEqual(carta1)
     })
 
+    test("deve retornar uma carta a partir do id", () => {
+        const carta0: Carta = {
+            id: 'id0',
+            naipe: Naipe.Espadas,
+            numero: NumeroCarta.As
+        }
+
+        const carta1: Carta = {
+            id: 'id1',
+            naipe: Naipe.Copas,
+            numero: NumeroCarta.Cinco
+        }
+
+        const carta2: Carta = {
+            id: 'id2',
+            naipe: Naipe.Ouros,
+            numero: NumeroCarta.Rei
+        }
+        
+        mockedList.prototype.iterator.mockImplementation(function* () {
+            yield carta0
+            yield carta1
+            yield carta2
+        })
+
+
+        const carta = sut.getCartaById('id1')
+        expect(carta).toEqual(carta1)
+    })
+
+    test("deve retornar undefined se não encontrar uma carta a partir do id", () => {
+        const carta0: Carta = {
+            id: 'id0',
+            naipe: Naipe.Espadas,
+            numero: NumeroCarta.As
+        }
+
+        const carta1: Carta = {
+            id: 'id1',
+            naipe: Naipe.Copas,
+            numero: NumeroCarta.Cinco
+        }
+
+        const carta2: Carta = {
+            id: 'id2',
+            naipe: Naipe.Ouros,
+            numero: NumeroCarta.Rei
+        }
+        
+        mockedList.prototype.iterator.mockImplementation(function* () {
+            yield carta0
+            yield carta1
+            yield carta2
+        })
+
+
+        const carta = sut.getCartaById('invalid-id')
+        expect(carta).toEqual(undefined)
+    })
+
+
+
     test('deve verificar se contém uma carta', () => {
         const carta1: Carta = {
             id: 'id1',

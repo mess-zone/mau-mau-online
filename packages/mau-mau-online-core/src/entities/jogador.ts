@@ -42,6 +42,16 @@ export class Jogador {
         return this.list.remove(carta)
     }
 
+    public getCartaById(id: string) {
+        for(const carta of this.iterator()) {
+            if(carta.id === id) {
+                return carta
+            }
+        }
+
+        return undefined
+    }
+
     // public tirarCartaAtIndex(index: number) {
     //     return this.list.removeAtIndex(index)
     // }
